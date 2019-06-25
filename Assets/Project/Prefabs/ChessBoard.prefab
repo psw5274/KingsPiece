@@ -1,0 +1,175 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1790092450891964}
+  m_IsPrefabAsset: 1
+--- !u!1 &1426413111064334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4916972357685210}
+  m_Layer: 9
+  m_Name: PieceZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1790092450891964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4966867309780724}
+  - component: {fileID: 33163074491293642}
+  - component: {fileID: 23805220192391480}
+  - component: {fileID: 65462087227114834}
+  - component: {fileID: 114329343442535862}
+  m_Layer: 9
+  m_Name: ChessBoard
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4916972357685210
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1426413111064334}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4966867309780724}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4966867309780724
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1790092450891964}
+  m_LocalRotation: {x: -0.00000003774895, y: 0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4916972357685210}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23805220192391480
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1790092450891964}
+  m_Enabled: 1
+  m_CastShadows: 2
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 2100000, guid: e4ad58aba5b5f6e4e85ceded50784f07, type: 2}
+  - {fileID: 2100000, guid: 8e2e30e5bda24bd4fab67bf935345510, type: 2}
+  - {fileID: 2100000, guid: 1f3788699af22834190ea0f6b0d25e97, type: 2}
+  - {fileID: 2100000, guid: 54aa7997fbbe3b14084b3f618abd89ed, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &33163074491293642
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1790092450891964}
+  m_Mesh: {fileID: 4300000, guid: c43951248554fbf46ad1bf1566406e2a, type: 3}
+--- !u!65 &65462087227114834
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1790092450891964}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 86.399994, y: 7.200004, z: 86.399994}
+  m_Center: {x: 0, y: 3.5999997, z: 0}
+--- !u!114 &114329343442535862
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1790092450891964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37671962d63da0b4ab2677b5dbffaf2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  piecePrefabs:
+  - {fileID: 1796800151865260, guid: 4b5b59ea85dd9e44aa9283a7cb8bb3de, type: 2}
+  - {fileID: 1157446167011792, guid: 4e4b1cb836d597b44b4a728e41d01ef3, type: 2}
+  - {fileID: 1491861083214104, guid: a18b58f952f6d7246be7679db777f91a, type: 2}
+  - {fileID: 1725489957569692, guid: fc9da8e6da45f714d9697cd9da364a84, type: 2}
+  - {fileID: 1918810308972412, guid: 0ce6a0b2bfbf6c64eb9e3e17dd02fb0d, type: 2}
+  - {fileID: 1491861083214104, guid: a18b58f952f6d7246be7679db777f91a, type: 2}
+  - {fileID: 1157446167011792, guid: 4e4b1cb836d597b44b4a728e41d01ef3, type: 2}
+  - {fileID: 1796800151865260, guid: 4b5b59ea85dd9e44aa9283a7cb8bb3de, type: 2}
+  - {fileID: 1916627097885876, guid: dd3681b0767b2744b809be37c8ce0cb0, type: 2}
+  - {fileID: 1456667637799710, guid: b07585486f4a74f478f0f86dfea6a153, type: 2}
+  - {fileID: 1445870044111076, guid: a62f3c71119e0d24a956b251f9434701, type: 2}
+  - {fileID: 1179837086558314, guid: 69d69c612d30f2048b240fdff7e26d80, type: 2}
+  - {fileID: 1015800932355428, guid: 66b0cdaec0ff2764db43245ccbeb7538, type: 2}
+  - {fileID: 1656876553663122, guid: 0488987e4be474541b420b03e5244e44, type: 2}
+  - {fileID: 1179837086558314, guid: 69d69c612d30f2048b240fdff7e26d80, type: 2}
+  - {fileID: 1445870044111076, guid: a62f3c71119e0d24a956b251f9434701, type: 2}
+  - {fileID: 1456667637799710, guid: b07585486f4a74f478f0f86dfea6a153, type: 2}
+  - {fileID: 1497831130957630, guid: 5acaadef8fe50204092ad812722edcb8, type: 2}
+  pieceUIPrefab: {fileID: 1211040884366042, guid: 8d35c41295613014e8821ebb2187a5ba,
+    type: 2}
+  moveHighlightFilter: {fileID: 1964941204299862, guid: 23c15b1ba1312c344a26568aa7bfeb7a,
+    type: 2}
+  attackHighlightFilter: {fileID: 1059395630119660, guid: e09f0cad0b08ac84f8d7718c1f6e22f7,
+    type: 2}
+  pieceZone: {fileID: 1426413111064334}
+  selectedBoardCoord:
+    col: 0
+    row: 0
+  selectedPiece: {fileID: 0}
+  isPieceSelected: 0
+  isMagicReady: 0
+  selectedMagicCard: {fileID: 0}
