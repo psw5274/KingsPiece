@@ -39,7 +39,7 @@ public class BuffSkill : Skill
             switch (target)
             {
                 case ModifyTarget.ATK:
-                    GameManager.Instance.modifiers.Push(new ModifierATK(targetPiece, param[0], method, param[1]));
+                    GameManager.Instance.modifiers.Activate(new ModifierATK(targetPiece, param[0], method, param[1]));
                     break;
                 case ModifyTarget.HP:
                     break;
