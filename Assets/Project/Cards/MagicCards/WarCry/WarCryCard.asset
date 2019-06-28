@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c157781caaabd02449134ddbeec88665, type: 3}
-  m_Name: WarCry
+  m_Name: WarCryCard
   m_EditorClassIdentifier: 
   cardName: WarCry
-  cardDescription: Doubled Piece's ATK
+  cardDescription: Doubled Piece's ATK for 4 turns
   cardTemplateImage: {fileID: 21300000, guid: 6daac5d3e645e70439b9e08935881e33, type: 3}
   cardBackImage: {fileID: 21300000, guid: a27fb40f67f9a1242ac54e840096f2e3, type: 3}
   cardPortraitImage: {fileID: 21300000, guid: e33073c12a1212141bb271ff12a51209, type: 3}
   cardGrade: 0
-  magicType: 0
-  magicData: {fileID: 0}
+  magicType: 1
+  magicData: {fileID: 11400000, guid: fc816ef62e4c5d545916d24db0b86c2c, type: 2}

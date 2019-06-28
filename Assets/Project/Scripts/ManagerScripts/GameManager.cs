@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public Text winningText;
     public TeamColor currentTurn { get; private set; } = TeamColor.White;
 
+    public ModifierQueue modifiers = new ModifierQueue();
     public bool isSkillUsed = false;
     public bool isMoved = false;
 
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour
         PlayerManager.Instance.ChangePlayerTeam();
         //
         CardManager.Instance.ShowPlayerHands();
+        modifiers.NotifyTurnPassed();
         isSkillUsed = false;
         isMoved = false;
     }
