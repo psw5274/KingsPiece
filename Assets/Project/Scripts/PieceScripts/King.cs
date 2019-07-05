@@ -6,7 +6,7 @@ public class King : Piece
 {
     public override void Initialize(TeamColor teamColor, HeroCard heroCard)
     {
-        base.Initialize(teamColor,heroCard);
+        base.Initialize(teamColor, heroCard);
         movingDirection = MovingDirection.Both;
         movingDistance = 1;
     }
