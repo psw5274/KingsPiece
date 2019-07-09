@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public enum MovingDirection { Straight, Diagonal, Both }
 public enum PieceStatus { Normal, Dead }
 
@@ -22,17 +21,9 @@ public abstract class Piece : MonoBehaviour
     public int statATK = 1;
     public int statHP = 3;
     public PieceStatus pieceStatus = PieceStatus.Normal;
-
-    protected int dataAttackCount = 0;
-    protected int dataHitCount = 0;
-    protected int dataKillCount = 0;
-    protected int dataMoveCount = 0;
-
+    
     protected bool isMovedFirst = false;
-
-    protected bool isMoved = false;
-    protected bool isUseSkill = false;
-
+    
     protected MovingDirection movingDirection = MovingDirection.Both;
     protected int movingDistance = 7;
     
@@ -131,23 +122,26 @@ public abstract class Piece : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Move Piece
+    /// </summary>
+    /// <param name="destCoord"> Destination coordinate </param>
+    /// <returns></returns>
     public virtual bool Move(BoardCoord destCoord)
     {
+        // Check 
         if (moveDestinationList.Exists(x => x == destCoord))
         {
-            if (true) // 성공
-            {
-                boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
-
-                pieceCoord = destCoord;
-                this.transform.position = pieceCoord.GetBoardCoardVector3();
-                boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
+            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
+                
+            this.transform.position = destCoord.GetBoardCoardVector3();
+            boardManager.boardStatus[destCoord.col][destCoord.row] = this.gameObject;
 
 
-                if (!isMovedFirst)
-                    isMovedFirst = true;
-                return true;
-            }
+            if (!isMovedFirst)
+                isMovedFirst = true;
+
+            return true;
         }
         else
         {
