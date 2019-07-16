@@ -19,8 +19,91 @@ public abstract class Piece : MonoBehaviour
     public List<BoardCoord> moveDestinationList = new List<BoardCoord>();
     public List<BoardCoord> attackTargetList = new List<BoardCoord>();
 
-    public int statATK = 1;
-    public int statHP = 3;
+    public int statHP = 0;
+    public int statATK = 0;
+
+    private int currentHP = 0;
+    private int additionalHP = 0;
+    public int CurrentHP
+    {
+        get
+        {
+            return currentHP;
+        }
+        set
+        {
+            currentHP = value;
+            currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
+        }
+    }
+    private int MaxHP
+    {
+        get
+        {
+            return statHP + additionalHP;
+        }
+    }
+    public int AdditionHPDelta
+    {
+        set
+        {
+            additionalHP += value;
+            currentHP += Mathf.Clamp(value, 0, value);
+            currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
+        }
+    }
+    public int MultiplicationHPDelta
+    {
+        set
+        {
+            int additionalValue = (int)(statHP * (value / 100.0f));
+            additionalHP += additionalValue;
+            currentHP += Mathf.Clamp(additionalValue, 0, additionalValue);
+            currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
+        }
+    }
+    private int currentATK = 0;
+    private int additionalATK = 0;
+    public int CurrentATK
+    {
+        get
+        {
+            return currentATK;
+        }
+        set
+        {
+            currentATK = value;
+            currentATK = Mathf.Clamp(currentATK, 0, MaxATK);
+        }
+    }
+    private int MaxATK
+    {
+        get
+        {
+            return statATK + additionalATK;
+        }
+    }
+    public int AdditionATKDelta
+    {
+        set
+        {
+            additionalATK += value;
+            currentATK += Mathf.Clamp(value, 0, value);
+            currentATK = Mathf.Clamp(currentATK, 0, MaxATK);
+        }
+    }
+    public int MultiplicationATKDelta
+    {
+        set
+        {
+            int additionalValue = (int)(statATK * (value / 100.0f));
+            additionalATK += additionalValue;
+            currentATK += Mathf.Clamp(additionalValue, 0, additionalValue);
+            currentATK = Mathf.Clamp(currentATK, 0, MaxATK);
+        }
+    }
+    public int movableCount = 1;
+    public int unbeatableCount = 0;
     public PieceStatus pieceStatus = PieceStatus.Normal;
 
     protected int dataAttackCount = 0;
@@ -30,7 +113,6 @@ public abstract class Piece : MonoBehaviour
 
     protected bool isMovedFirst = false;
 
-    protected bool isMoved = false;
     protected bool isUseSkill = false;
 
     protected MovingDirection movingDirection = MovingDirection.Both;
@@ -42,8 +124,10 @@ public abstract class Piece : MonoBehaviour
         this.cardData = heroCard;
         cardData = (HeroCard)ScriptableObject.CreateInstance(typeof(HeroCard));
 
-        this.statATK = heroCard.statATK;
-        this.statHP = heroCard.statHP;
+        statHP = heroCard.statHP;
+        statATK = heroCard.statATK;
+        currentHP = heroCard.statHP;
+        currentATK = heroCard.statATK;
     }
 
     public virtual bool IsDestination()
@@ -66,6 +150,11 @@ public abstract class Piece : MonoBehaviour
         moveDestinationList.Clear();
         attackTargetList.Clear();
         ResetBoardCoord();
+
+        if (movableCount == 0)
+        {
+            return;
+        }
 
         List<BoardCoord> tmpList = new List<BoardCoord>();
 
@@ -110,7 +199,7 @@ public abstract class Piece : MonoBehaviour
             return false;
         }
         Piece target = boardManager.boardStatus[targetCoord.col][targetCoord.row].GetComponent<Piece>();
-        target.statHP -= this.statATK;
+        target.CurrentHP -= this.CurrentATK;
         target.UpdateStatus();
 
         if (target.pieceStatus == PieceStatus.Dead)
@@ -127,7 +216,9 @@ public abstract class Piece : MonoBehaviour
             this.transform.position = pieceCoord.GetBoardCoardVector3();
             boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
         }
-        
+
+        EffectManager.Instance.NotifyAttacking(this);
+        EffectManager.Instance.NotifyDamaged(target);
         return true;
     }
 
@@ -135,19 +226,19 @@ public abstract class Piece : MonoBehaviour
     {
         if (moveDestinationList.Exists(x => x == destCoord))
         {
-            if (true) // 성공
-            {
-                boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
+            // 성공
+            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
 
-                pieceCoord = destCoord;
-                this.transform.position = pieceCoord.GetBoardCoardVector3();
-                boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
+            pieceCoord = destCoord;
+            this.transform.position = pieceCoord.GetBoardCoardVector3();
+            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
 
 
-                if (!isMovedFirst)
-                    isMovedFirst = true;
-                return true;
-            }
+            if (!isMovedFirst)
+                isMovedFirst = true;
+
+            EffectManager.Instance.NotifyMoved(this);
+            return true;
         }
         else
         {
@@ -158,7 +249,7 @@ public abstract class Piece : MonoBehaviour
 
     public void UpdateStatus()
     {
-        if (statHP <= 0)
+        if (CurrentHP <= 0)
         {
             this.pieceStatus = PieceStatus.Dead;
             this.Die();

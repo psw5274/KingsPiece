@@ -18,6 +18,11 @@ public class Knight : Piece
         attackTargetList.Clear();
         ResetBoardCoord();
 
+        if (movableCount == 0)
+        {
+            return;
+        }
+
         foreach (BoardCoord coord in destCoords)
         {
             BoardCoord tmpCoord = pieceCoord + coord;
@@ -49,7 +54,7 @@ public class Knight : Piece
             return false;
         }
         Piece target = boardManager.boardStatus[targetCoord.col][targetCoord.row].GetComponent<Piece>();
-        target.statHP -= this.statATK;
+        target.CurrentHP -= this.CurrentATK;
         target.UpdateStatus();
 
         if (target.pieceStatus == PieceStatus.Dead)
@@ -60,6 +65,8 @@ public class Knight : Piece
             boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
         }
 
+        EffectManager.Instance.NotifyAttacking(this);
+        EffectManager.Instance.NotifyDamaged(target);
         return true;
     }
 }

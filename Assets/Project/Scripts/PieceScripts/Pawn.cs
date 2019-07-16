@@ -11,6 +11,11 @@ class Pawn : Piece
         attackTargetList.Clear();
         ResetBoardCoord();
 
+        if (movableCount == 0)
+        {
+            return;
+        }
+
         BoardCoord tmpCoord;
 
         tmpCoord = pieceCoord + new BoardCoord(0, 1) * (int)teamColor;
@@ -57,7 +62,7 @@ class Pawn : Piece
             return false;
 
         Piece target = boardManager.boardStatus[targetCoord.col][targetCoord.row].GetComponent<Piece>();
-        target.statHP -= this.statATK;
+        target.CurrentHP -= this.CurrentATK;
         target.UpdateStatus();
 
         if (target.pieceStatus == PieceStatus.Dead)
@@ -68,6 +73,8 @@ class Pawn : Piece
             boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
         }
 
+        EffectManager.Instance.NotifyAttacking(this);
+        EffectManager.Instance.NotifyDamaged(target);
         return true;
     }
 

@@ -40,10 +40,11 @@ public class GameManager : MonoBehaviour
     {
         currentTurn = (currentTurn == TeamColor.Black) ? TeamColor.White : TeamColor.Black;
         BoardManager.Instance.ResetBoardHighlighter();
-        //
+        BoardManager.Instance.ResetPiecesMovableCount();
         PlayerManager.Instance.ChangePlayerTeam();
         //
         CardManager.Instance.ShowPlayerHands();
+        EffectManager.Instance.NotifyTurnPassed();
         isSkillUsed = false;
         isMoved = false;
     }

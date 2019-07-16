@@ -7,7 +7,5 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "MagicCard", menuName = "Card/MagicCard")]
 public class MagicCard : BasicCardData
 {
-    public SkillType magicType;
     public Skill magicData;
-
 }

@@ -13,11 +13,6 @@ public class MagicCardDisplay : CardDisplay
         nameText.text = cardData.cardName;
         descriptionText.text = cardData.cardDescription;
 
-        foreach (int param in cardData.magicData.param)
-        {
-            descriptionText.text = descriptionText.text.Replace("[param]", param.ToString());
-        }
-
         cardTemplateImage.sprite = cardData.cardTemplateImage;
         cardBackTemplateImage.sprite = cardData.cardBackImage;
         cardPortraitImage.sprite = cardData.cardPortraitImage;
