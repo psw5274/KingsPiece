@@ -12,15 +12,12 @@ public abstract class Piece : MonoBehaviour
     protected BoardManager boardManager;
     public BoardCoord pieceCoord;
 
-    public BasicCardData cardData;
+    public HeroCard cardData;
     public TeamColor teamColor;
 
     protected List<object> bufList = new List<object>();
     public List<BoardCoord> moveDestinationList = new List<BoardCoord>();
     public List<BoardCoord> attackTargetList = new List<BoardCoord>();
-
-    public int statHP = 0;
-    public int statATK = 0;
 
     private int currentHP = 0;
     private int additionalHP = 0;
@@ -40,7 +37,7 @@ public abstract class Piece : MonoBehaviour
     {
         get
         {
-            return statHP + additionalHP;
+            return cardData.statHP + additionalHP;
         }
     }
     public int AdditionHPDelta
@@ -48,7 +45,6 @@ public abstract class Piece : MonoBehaviour
         set
         {
             additionalHP += value;
-            currentHP += Mathf.Clamp(value, 0, value);
             currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
         }
     }
@@ -56,31 +52,17 @@ public abstract class Piece : MonoBehaviour
     {
         set
         {
-            int additionalValue = (int)(statHP * (value / 100.0f));
+            int additionalValue = (int)(cardData.statHP * (value / 100.0f));
             additionalHP += additionalValue;
-            currentHP += Mathf.Clamp(additionalValue, 0, additionalValue);
             currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
         }
     }
-    private int currentATK = 0;
     private int additionalATK = 0;
     public int CurrentATK
     {
         get
         {
-            return currentATK;
-        }
-        set
-        {
-            currentATK = value;
-            currentATK = Mathf.Clamp(currentATK, 0, MaxATK);
-        }
-    }
-    private int MaxATK
-    {
-        get
-        {
-            return statATK + additionalATK;
+            return cardData.statATK + additionalATK;
         }
     }
     public int AdditionATKDelta
@@ -88,18 +70,13 @@ public abstract class Piece : MonoBehaviour
         set
         {
             additionalATK += value;
-            currentATK += Mathf.Clamp(value, 0, value);
-            currentATK = Mathf.Clamp(currentATK, 0, MaxATK);
         }
     }
     public int MultiplicationATKDelta
     {
         set
         {
-            int additionalValue = (int)(statATK * (value / 100.0f));
-            additionalATK += additionalValue;
-            currentATK += Mathf.Clamp(additionalValue, 0, additionalValue);
-            currentATK = Mathf.Clamp(currentATK, 0, MaxATK);
+            additionalATK += (int)(cardData.statATK * (value / 100.0f));
         }
     }
     public int movableCount = 1;
@@ -124,10 +101,7 @@ public abstract class Piece : MonoBehaviour
         this.cardData = heroCard;
         cardData = (HeroCard)ScriptableObject.CreateInstance(typeof(HeroCard));
 
-        statHP = heroCard.statHP;
-        statATK = heroCard.statATK;
         currentHP = heroCard.statHP;
-        currentATK = heroCard.statATK;
     }
 
     public virtual bool IsDestination()

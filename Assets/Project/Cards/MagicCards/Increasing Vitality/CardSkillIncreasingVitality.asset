@@ -18,3 +18,5 @@ MonoBehaviour:
   parameters:
   - target: 0
     value: 5
+  - target: 6
+    value: 5
