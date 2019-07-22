@@ -8,7 +8,7 @@ using System.Text;
 
 public class NetworkClient : MonoBehaviour
 {
-    Socket socket;
+    static Socket socket;
     IPEndPoint ep;
     string serverIP = "127.0.0.1";
     int serverPort = 9876;
@@ -18,10 +18,7 @@ public class NetworkClient : MonoBehaviour
 
     void Start()
     {
-        socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-        ep = new IPEndPoint(IPAddress.Parse(serverIP), serverPort);
-        socket.Connect(ep);
+        ConnectSocket();
     }
 
     void Update()
@@ -31,5 +28,21 @@ public class NetworkClient : MonoBehaviour
         int n = socket.Receive(recvBuff);
         print("Recv byte = " + n);
         print(Encoding.UTF8.GetString(recvBuff, 0, n));
+    }
+
+    public bool ConnectSocket()
+    {
+        try
+        {
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            ep = new IPEndPoint(IPAddress.Parse(serverIP), serverPort);
+            socket.Connect(ep);
+        }
+        catch
+        {
+            return false;
+        }
+        return true;
     }
 }
