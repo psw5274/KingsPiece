@@ -20,7 +20,7 @@ MonoBehaviour:
   cardGrade: 0
   heroClass: 0
   heroCamp: 0
-  statHP: 10
-  statATK: 3
+  statHP: 30
+  statATK: 15
   heroModelPrefab: {fileID: 1725489957569692, guid: fc9da8e6da45f714d9697cd9da364a84,
     type: 3}
