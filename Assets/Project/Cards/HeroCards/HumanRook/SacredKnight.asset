@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d9db31f1eeb8a64faf05f8bf91412d0, type: 3}
-  m_Name: DevilPawn
+  m_Name: SacredKnight
   m_EditorClassIdentifier: 
-  cardName: DevilPawn
-  cardDescription: Devil Pawn
+  cardName: SacredKnight
+  cardDescription: A sacred knight
   cardTemplateImage: {fileID: 21300000, guid: 6daac5d3e645e70439b9e08935881e33, type: 3}
   cardBackImage: {fileID: 21300000, guid: a27fb40f67f9a1242ac54e840096f2e3, type: 3}
   cardPortraitImage: {fileID: 0}
   cardGrade: 0
-  heroClass: 5
-  heroCamp: 1
-  statHP: 3
-  statATK: 3
-  heroModelPrefab: {fileID: 1497831130957630, guid: 5acaadef8fe50204092ad812722edcb8,
+  heroClass: 3
+  heroCamp: 0
+  statHP: 8
+  statATK: 5
+  heroModelPrefab: {fileID: 1796800151865260, guid: 4b5b59ea85dd9e44aa9283a7cb8bb3de,
     type: 3}

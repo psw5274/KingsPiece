@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d9db31f1eeb8a64faf05f8bf91412d0, type: 3}
-  m_Name: DevilBishop
+  m_Name: Lizardman
   m_EditorClassIdentifier: 
-  cardName: DevilBishop
-  cardDescription: Devil Bishop
+  cardName: Lizardman
+  cardDescription: Lizardman
   cardTemplateImage: {fileID: 21300000, guid: 6daac5d3e645e70439b9e08935881e33, type: 3}
   cardBackImage: {fileID: 21300000, guid: a27fb40f67f9a1242ac54e840096f2e3, type: 3}
   cardPortraitImage: {fileID: 0}
   cardGrade: 0
-  heroClass: 2
+  heroClass: 4
   heroCamp: 1
-  statHP: 5
+  statHP: 8
   statATK: 5
-  heroModelPrefab: {fileID: 1179837086558314, guid: 69d69c612d30f2048b240fdff7e26d80,
+  heroModelPrefab: {fileID: 1445870044111076, guid: a62f3c71119e0d24a956b251f9434701,
     type: 3}

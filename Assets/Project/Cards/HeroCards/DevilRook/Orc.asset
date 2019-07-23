@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d9db31f1eeb8a64faf05f8bf91412d0, type: 3}
-  m_Name: DevilQueen
+  m_Name: Orc
   m_EditorClassIdentifier: 
-  cardName: DevilQueen
-  cardDescription: Devil Queen
+  cardName: Orc
+  cardDescription: Orc
   cardTemplateImage: {fileID: 21300000, guid: 6daac5d3e645e70439b9e08935881e33, type: 3}
   cardBackImage: {fileID: 21300000, guid: a27fb40f67f9a1242ac54e840096f2e3, type: 3}
   cardPortraitImage: {fileID: 0}
   cardGrade: 0
-  heroClass: 1
+  heroClass: 3
   heroCamp: 1
-  statHP: 9
-  statATK: 6
-  heroModelPrefab: {fileID: 1656876553663122, guid: 0488987e4be474541b420b03e5244e44,
+  statHP: 8
+  statATK: 5
+  heroModelPrefab: {fileID: 1456667637799710, guid: b07585486f4a74f478f0f86dfea6a153,
     type: 3}

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d9db31f1eeb8a64faf05f8bf91412d0, type: 3}
-  m_Name: HumanKing
+  m_Name: TheKing
   m_EditorClassIdentifier: 
-  cardName: HumanKing
-  cardDescription: Human King
+  cardName: The King
+  cardDescription: The King
   cardTemplateImage: {fileID: 21300000, guid: 6daac5d3e645e70439b9e08935881e33, type: 3}
   cardBackImage: {fileID: 21300000, guid: a27fb40f67f9a1242ac54e840096f2e3, type: 3}
   cardPortraitImage: {fileID: 0}
