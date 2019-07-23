@@ -23,6 +23,9 @@ public class BoardManager : MonoBehaviour
     public const int NUM_BOARD_COL = 8;
     public const int NUM_PIECE_PREFABS = 18; // or 32 for all pawns selectable
 
+    /// <summary>
+    /// Card Set from user's setting
+    /// </summary>
     public HeroCard[] heroCards = new HeroCard[NUM_PIECE_PREFABS];
 
     public GameObject pieceUIPrefab;
@@ -30,7 +33,9 @@ public class BoardManager : MonoBehaviour
     public GameObject attackHighlightFilter;
     public GameObject pieceZone;
 
-
+    /// <summary>
+    /// Chess Board Status with pieces
+    /// </summary>
     public GameObject[][] boardStatus;
     private List<GameObject> filterList = new List<GameObject>();
 
@@ -60,6 +65,11 @@ public class BoardManager : MonoBehaviour
             return instance;
         }
     }
+
+    /// <summary>
+    /// Initialize game board
+    /// </summary>
+    /// <returns></returns>
     public bool InitBoard()
     {
 
@@ -86,6 +96,7 @@ public class BoardManager : MonoBehaviour
                                                                                heroCards[i+NUM_PIECE_PREFABS/2]);
         }
 
+        // code for when num of user's piece set are 18
         if (NUM_PIECE_PREFABS == 18)
         {
             for (int i = 0; i < NUM_PIECE_PREFABS / 2 - 1; i++)    // instantiate pawn
@@ -109,8 +120,10 @@ public class BoardManager : MonoBehaviour
         }
 
         ResetPiecesMovableCount();
+
         return true;
     }
+
     private bool SelectPiece(BoardCoord boardCoord)
     {
         selectedPiece = boardStatus[boardCoord.col][boardCoord.row];
