@@ -9,10 +9,4 @@ public class Bishop : Piece
         base.Initialize(teamColor, heroCard);
         movingDirection = MovingDirection.Diagonal;
     }
-
-    public override bool UseSkill()
-    {
-
-        return true;
-    }
 }

@@ -41,13 +41,12 @@ public class BoardManager : MonoBehaviour
 
     [SerializeField]
     private BoardCoord selectedBoardCoord;
-    [SerializeField]
-    private GameObject selectedPiece;
-    [SerializeField]
-    private bool isPieceSelected = false;
+    public GameObject selectedPiece;
+    public bool isPieceSelected = false;
     public bool isMagicReady = false;
+    public bool isSkillReady = false;
     public MagicCard selectedMagicCard = null;
-
+    public HeroCard selectedHeroCard = null;
 
     private static BoardManager instance = null;
     public static BoardManager Instance
@@ -143,7 +142,9 @@ public class BoardManager : MonoBehaviour
         selectedPiece = null;
         isPieceSelected = false;
         isMagicReady = false;
+        isSkillReady = false;
         selectedMagicCard = null;
+        selectedHeroCard = null;
     }
 
     /// <summary>
@@ -170,6 +171,18 @@ public class BoardManager : MonoBehaviour
                 selectedMagicCard.magicData.Operate(selectedBoardCoord);
 
                 CardManager.Instance.UseCard(selectedMagicCard);
+            }
+        }
+        // 스킬
+        else if (isSkillReady && selectedHeroCard != null)
+        {
+            if (boardStatus[selectedBoardCoord.col][selectedBoardCoord.row] == null)
+            {
+                ResetBoardHighlighter();
+            }
+            else
+            {
+                selectedHeroCard.skill.Operate(selectedBoardCoord);
             }
         }
         // 이동

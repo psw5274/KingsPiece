@@ -77,10 +77,4 @@ class Pawn : Piece
         EffectManager.Instance.NotifyDamaged(target);
         return true;
     }
-
-    public override bool UseSkill()
-    {
-
-        return true;
-    }
 }

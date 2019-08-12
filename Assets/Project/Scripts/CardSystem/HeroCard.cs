@@ -14,7 +14,7 @@ public class HeroCard : BasicCardData
 
     public GameObject heroModelPrefab;
 
-    protected List<object> skillList = new List<object>();
+    public Skill skill;
 
     
     public void Awake()

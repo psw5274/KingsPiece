@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 public enum MovingDirection { Straight, Diagonal, Both }
 public enum PieceStatus { Normal, Dead }
@@ -15,7 +13,6 @@ public abstract class Piece : MonoBehaviour
     public HeroCard cardData;
     public TeamColor teamColor;
 
-    protected List<object> bufList = new List<object>();
     public List<BoardCoord> moveDestinationList = new List<BoardCoord>();
     public List<BoardCoord> attackTargetList = new List<BoardCoord>();
 
@@ -98,8 +95,7 @@ public abstract class Piece : MonoBehaviour
     public virtual void Initialize(TeamColor teamColor, HeroCard heroCard)
     {
         this.teamColor = teamColor;
-        this.cardData = heroCard;
-        cardData = (HeroCard)ScriptableObject.CreateInstance(typeof(HeroCard));
+        this.cardData = Instantiate<HeroCard>(heroCard);
 
         currentHP = heroCard.statHP;
     }
@@ -116,7 +112,6 @@ public abstract class Piece : MonoBehaviour
     {
         return attackCoord.IsAvailable() && attackTargetList.Exists(x => x == attackCoord);
     }
-
     
     // Todo : GetAvailableAttackTaget()과 분리
     public virtual void GetAvailableDestination()
@@ -219,7 +214,16 @@ public abstract class Piece : MonoBehaviour
             return false;
         }
     }
-    public abstract bool UseSkill();
+
+    public bool SkillReady()
+    {
+        BoardManager.Instance.ResetBoardHighlighter();
+        BoardManager.Instance.HighlightBoard(cardData.skill.GetAvailableTargetCoord(), Action.Attack);
+        BoardManager.Instance.isSkillReady = true;
+        BoardManager.Instance.selectedHeroCard = cardData;
+
+        return true;
+    }
 
     public void UpdateStatus()
     {

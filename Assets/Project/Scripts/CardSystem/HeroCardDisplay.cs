@@ -20,7 +20,24 @@ public class HeroCardDisplay : CardDisplay
         cardBackTemplateImage.sprite = cardData.cardBackImage;
         cardPortraitImage.sprite = cardData.cardPortraitImage;
 
-        atkText.text = cardData.statATK.ToString();
+        atkText.text = cardData.statHP.ToString();
         hpText.text = cardData.statHP.ToString();
+    }
+
+    /// <summary>
+    /// 카드 사용(마우스 클릭 뗄때)
+    /// </summary>
+    /// <param name="eventData"></param>
+    public override void OnPointerUp(PointerEventData eventData)
+    {
+        if (dragBeginningPoint != this.transform.position)
+        {
+            Debug.Log(dragBeginningPoint);
+            Debug.Log(this.transform.position);
+            return;
+        }
+
+        BoardManager.Instance.selectedPiece.GetComponent<Piece>().SkillReady();
+
     }
 }

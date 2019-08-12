@@ -10,11 +10,4 @@ public class Rook : Piece
         base.Initialize(teamColor,heroCard);
         movingDirection = MovingDirection.Straight;
     }
-    
-
-    public override bool UseSkill()
-    {
-
-        return true;
-    }
 }

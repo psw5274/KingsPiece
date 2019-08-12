@@ -11,12 +11,6 @@ public class King : Piece
         movingDistance = 1;
     }
 
-    public override bool UseSkill()
-    {
-
-        return true;
-    }
-
     protected override void Die()
     {
         base.Die();

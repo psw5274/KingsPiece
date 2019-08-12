@@ -9,9 +9,4 @@ public class Queen : Piece
         base.Initialize(teamColor, heroCard);
         movingDirection = MovingDirection.Both;
     }
-    public override bool UseSkill()
-    {
-
-        return true;
-    }
 }

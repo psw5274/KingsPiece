@@ -41,12 +41,6 @@ public class Knight : Piece
         }
     }
 
-    public override bool UseSkill()
-    {
-
-        return true;
-    }
-
     public override bool Attack(BoardCoord targetCoord)
     {
         if (!attackTargetList.Exists(x => x == targetCoord))
