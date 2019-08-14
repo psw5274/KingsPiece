@@ -119,6 +119,8 @@ public class BoardManager : MonoBehaviour
             }
         }
 
+        ResetPiecesMovableCount();
+
         return true;
     }
 
@@ -165,7 +167,7 @@ public class BoardManager : MonoBehaviour
             }
             else
             {
-                selectedMagicCard.magicData.SkillScript(selectedBoardCoord);
+                selectedMagicCard.magicData.Operate(selectedBoardCoord);
 
                 CardManager.Instance.UseCard(selectedMagicCard);
             }
@@ -223,6 +225,22 @@ public class BoardManager : MonoBehaviour
             Destroy(filter);
         }
         filterList.Clear();
+    }
+
+    public void ResetPiecesMovableCount()
+    {
+        foreach (var rows in BoardManager.Instance.boardStatus)
+        {
+            foreach (var pieceObject in rows)
+            {
+                if (pieceObject == null)
+                {
+                    continue;
+                }
+
+                pieceObject.GetComponent<Piece>().movableCount = 1;
+            }
+        }
     }
 
     // TODO : 손좀 보자

@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
     public Text winningText;
     public TeamColor currentTurn { get; private set; } = TeamColor.White;
 
-    public ModifierQueue modifiers = new ModifierQueue();
     public bool isSkillUsed = false;
     public bool isMoved = false;
 
@@ -41,11 +40,11 @@ public class GameManager : MonoBehaviour
     {
         currentTurn = (currentTurn == TeamColor.Black) ? TeamColor.White : TeamColor.Black;
         BoardManager.Instance.ResetBoardHighlighter();
-        //
+        BoardManager.Instance.ResetPiecesMovableCount();
         PlayerManager.Instance.ChangePlayerTeam();
         //
         CardManager.Instance.ShowPlayerHands();
-        modifiers.NotifyTurnPassed();
+        EffectManager.Instance.NotifyTurnPassed();
         isSkillUsed = false;
         isMoved = false;
     }

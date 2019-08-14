@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public enum MovingDirection { Straight, Diagonal, Both }
 public enum PieceStatus { Normal, Dead }
 
@@ -11,19 +12,86 @@ public abstract class Piece : MonoBehaviour
     protected BoardManager boardManager;
     public BoardCoord pieceCoord;
 
-    public BasicCardData cardData;
+    public HeroCard cardData;
     public TeamColor teamColor;
 
     protected List<object> bufList = new List<object>();
     public List<BoardCoord> moveDestinationList = new List<BoardCoord>();
     public List<BoardCoord> attackTargetList = new List<BoardCoord>();
 
-    public int statATK = 1;
-    public int statHP = 3;
+    private int currentHP = 0;
+    private int additionalHP = 0;
+    public int CurrentHP
+    {
+        get
+        {
+            return currentHP;
+        }
+        set
+        {
+            currentHP = value;
+            currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
+        }
+    }
+    private int MaxHP
+    {
+        get
+        {
+            return cardData.statHP + additionalHP;
+        }
+    }
+    public int AdditionHPDelta
+    {
+        set
+        {
+            additionalHP += value;
+            currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
+        }
+    }
+    public int MultiplicationHPDelta
+    {
+        set
+        {
+            int additionalValue = (int)(cardData.statHP * (value / 100.0f));
+            additionalHP += additionalValue;
+            currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
+        }
+    }
+    private int additionalATK = 0;
+    public int CurrentATK
+    {
+        get
+        {
+            return cardData.statATK + additionalATK;
+        }
+    }
+    public int AdditionATKDelta
+    {
+        set
+        {
+            additionalATK += value;
+        }
+    }
+    public int MultiplicationATKDelta
+    {
+        set
+        {
+            additionalATK += (int)(cardData.statATK * (value / 100.0f));
+        }
+    }
+    public int movableCount = 1;
+    public int unbeatableCount = 0;
     public PieceStatus pieceStatus = PieceStatus.Normal;
-    
+
+    protected int dataAttackCount = 0;
+    protected int dataHitCount = 0;
+    protected int dataKillCount = 0;
+    protected int dataMoveCount = 0;
+
     protected bool isMovedFirst = false;
-    
+
+    protected bool isUseSkill = false;
+
     protected MovingDirection movingDirection = MovingDirection.Both;
     protected int movingDistance = 7;
     
@@ -33,8 +101,7 @@ public abstract class Piece : MonoBehaviour
         this.cardData = heroCard;
         cardData = (HeroCard)ScriptableObject.CreateInstance(typeof(HeroCard));
 
-        this.statATK = heroCard.statATK;
-        this.statHP = heroCard.statHP;
+        currentHP = heroCard.statHP;
     }
 
     public virtual bool IsDestination()
@@ -57,6 +124,11 @@ public abstract class Piece : MonoBehaviour
         moveDestinationList.Clear();
         attackTargetList.Clear();
         ResetBoardCoord();
+
+        if (movableCount == 0)
+        {
+            return;
+        }
 
         List<BoardCoord> tmpList = new List<BoardCoord>();
 
@@ -101,7 +173,7 @@ public abstract class Piece : MonoBehaviour
             return false;
         }
         Piece target = boardManager.boardStatus[targetCoord.col][targetCoord.row].GetComponent<Piece>();
-        target.statHP -= this.statATK;
+        target.CurrentHP -= this.CurrentATK;
         target.UpdateStatus();
 
         if (target.pieceStatus == PieceStatus.Dead)
@@ -118,29 +190,28 @@ public abstract class Piece : MonoBehaviour
             this.transform.position = pieceCoord.GetBoardCoardVector3();
             boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
         }
-        
+
+        EffectManager.Instance.NotifyAttacking(this);
+        EffectManager.Instance.NotifyDamaged(target);
         return true;
     }
 
-    /// <summary>
-    /// Move Piece
-    /// </summary>
-    /// <param name="destCoord"> Destination coordinate </param>
-    /// <returns></returns>
     public virtual bool Move(BoardCoord destCoord)
     {
-        // Check 
         if (moveDestinationList.Exists(x => x == destCoord))
         {
+            // 성공
             boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
-                
-            this.transform.position = destCoord.GetBoardCoardVector3();
-            boardManager.boardStatus[destCoord.col][destCoord.row] = this.gameObject;
+
+            pieceCoord = destCoord;
+            this.transform.position = pieceCoord.GetBoardCoardVector3();
+            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
 
 
             if (!isMovedFirst)
                 isMovedFirst = true;
 
+            EffectManager.Instance.NotifyMoved(this);
             return true;
         }
         else
@@ -152,7 +223,7 @@ public abstract class Piece : MonoBehaviour
 
     public void UpdateStatus()
     {
-        if (statHP <= 0)
+        if (CurrentHP <= 0)
         {
             this.pieceStatus = PieceStatus.Dead;
             this.Die();

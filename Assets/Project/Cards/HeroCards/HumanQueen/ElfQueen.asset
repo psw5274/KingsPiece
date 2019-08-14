@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d9db31f1eeb8a64faf05f8bf91412d0, type: 3}
-  m_Name: DevilKing
+  m_Name: ElfQueen
   m_EditorClassIdentifier: 
-  cardName: DevilKing
-  cardDescription: Devil King
+  cardName: Elf Queen
+  cardDescription: A elf queen
   cardTemplateImage: {fileID: 21300000, guid: 6daac5d3e645e70439b9e08935881e33, type: 3}
   cardBackImage: {fileID: 21300000, guid: a27fb40f67f9a1242ac54e840096f2e3, type: 3}
   cardPortraitImage: {fileID: 0}
   cardGrade: 0
-  heroClass: 0
-  heroCamp: 1
-  statHP: 35
+  heroClass: 1
+  heroCamp: 0
+  statHP: 25
   statATK: 20
-  heroModelPrefab: {fileID: 1015800932355428, guid: 66b0cdaec0ff2764db43245ccbeb7538,
+  heroModelPrefab: {fileID: 1918810308972412, guid: 0ce6a0b2bfbf6c64eb9e3e17dd02fb0d,
     type: 3}
