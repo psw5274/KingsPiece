@@ -218,7 +218,12 @@ public abstract class Piece : MonoBehaviour
     public bool SkillReady()
     {
         BoardManager.Instance.ResetBoardHighlighter();
-        BoardManager.Instance.HighlightBoard(cardData.skill.GetAvailableTargetCoord(), Action.Attack);
+        List<BoardCoord> targetCoord = cardData.skill.GetAvailableTargetCoord();
+        if (targetCoord.Count == 0)
+        {
+            return false;
+        }
+        BoardManager.Instance.HighlightBoard(targetCoord, Action.Attack);
         BoardManager.Instance.isSkillReady = true;
         BoardManager.Instance.selectedHeroCard = cardData;
 

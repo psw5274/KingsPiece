@@ -12,53 +12,28 @@ public class GridQuery
         private class Sequentional
         {
             [SerializeField]
-            private bool repeat = false;
+            private int repeat = 1;
             [SerializeField]
             private BoardCoord[] deltas = null;
 
             public BoardCoord Query(BoardCoord center, TeamColor targetColor)
             {
-                if (repeat)
-                {
-                    return QueryRepeat(center, targetColor);
-                }
-                else
-                {
-                    return QueryOnce(center, targetColor);
-                }
-            }
-
-            private BoardCoord QueryOnce(BoardCoord center, TeamColor targetColor)
-            {
                 foreach (BoardCoord delta in deltas)
                 {
-                    BoardCoord targetCoordination = center + delta;
-                    GameObject gameobject = BoardManager.Instance.boardStatus[targetCoordination.col][targetCoordination.row];
-                    if (gameobject == null)
+                    for (int repeated = 0; repeated < repeat; ++repeated)
                     {
-                        continue;
-                    }
-                    
-                    return targetCoordination;
-                }
-
-                return BoardCoord.NEGATIVE;
-            }
-
-            private BoardCoord QueryRepeat(BoardCoord center, TeamColor targetColor)
-            {
-                foreach (BoardCoord delta in deltas)
-                {
-                    while (true)
-                    {
-                        BoardCoord targetCoordination = center + delta;
+                        BoardCoord targetCoordination = center + delta + (delta * repeated);
                         if (targetCoordination.IsAvailable() == false)
                         {
                             break;
                         }
-
                         GameObject gameobject = BoardManager.Instance.boardStatus[targetCoordination.col][targetCoordination.row];
                         if (gameobject == null)
+                        {
+                            continue;
+                        }
+                        Piece piece = gameobject.GetComponent<Piece>();
+                        if (piece.teamColor != targetColor)
                         {
                             continue;
                         }
@@ -66,13 +41,12 @@ public class GridQuery
                         return targetCoordination;
                     }
                 }
-
                 return BoardCoord.NEGATIVE;
             }
         }
 
         [SerializeField]
-        private Sequentional[] sequentionals = null;
+        private Sequentional[] sequentionals;
 
         public HashSet<BoardCoord> Query(BoardCoord center, TeamColor targetColor)
         {
@@ -84,6 +58,20 @@ public class GridQuery
             }
 
             targetCoordinations.Remove(BoardCoord.NEGATIVE);
+
+#if CONSOLE_LOGGING
+        {
+            string DEBUG_STRING = $"Grid Query is finish (Result can see below)\n";
+            DEBUG_STRING += $"using center(({center.col}, {center.row})), target color({targetColor.ToString()})\n";
+            DEBUG_STRING += $"***\t\t\t***\n";
+            foreach (var coordination in targetCoordinations)
+            {
+                DEBUG_STRING += $"({coordination.col}, {coordination.row})\n";
+            }
+            DEBUG_STRING += $"***\t\t\t***\n";
+            Debug.Log(DEBUG_STRING);
+        }
+#endif
             return targetCoordinations;
         }
     }
@@ -120,6 +108,19 @@ public class GridQuery
             }
         }
 
+#if CONSOLE_LOGGING
+        {
+            string DEBUG_STRING = $"Grid Query FOR ALL is finish (Result can see below)\n";
+            DEBUG_STRING += $"using target color({targetColor.ToString()})\n";
+            DEBUG_STRING += $"***\t\t\t***\n";
+            foreach (var coordination in targetCoordinations)
+            {
+                DEBUG_STRING += $"({coordination.col}, {coordination.row})\n";
+            }
+            DEBUG_STRING += $"***\t\t\t***\n";
+            Debug.Log(DEBUG_STRING);
+        }
+#endif
         return targetCoordinations;
     }
 }

@@ -33,9 +33,10 @@ public class Skill : ScriptableObject
     public bool isTargetOpposite;
     public GridQuery relativeTargetGrid = new GridQuery();
 
-    public List<BoardCoord> GetAvailableTargetCoord()
+    public virtual List<BoardCoord> GetAvailableTargetCoord()
     {
-        BoardCoord center = BoardManager.Instance.isSkillReady ? BoardManager.Instance.selectedPiece.GetComponent<Piece>().pieceCoord : BoardCoord.NEGATIVE;
+        GameObject piece = BoardManager.Instance.selectedPiece;
+        BoardCoord center = piece == null ? BoardCoord.NEGATIVE : piece.GetComponent<Piece>().pieceCoord;
         TeamColor targetTeamColor;
 
         if (isTargetOpposite)
@@ -64,7 +65,7 @@ public class Skill : ScriptableObject
         return relativeTargetGrid.TargetCoordinationQuery(center, targetTeamColor).ToList();
     }
 
-    public void Operate(BoardCoord selectedBoardCoord)
+    public virtual void Operate(BoardCoord selectedBoardCoord)
     {
         var target = BoardManager.Instance.boardStatus[selectedBoardCoord.col][selectedBoardCoord.row].GetComponent<Piece>();
         EffectManager.Instance.AddEffect(target, this);
