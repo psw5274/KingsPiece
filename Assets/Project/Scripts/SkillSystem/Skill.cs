@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,25 +30,38 @@ public class Skill : ScriptableObject
     public int duration;
     public ApplyingTiming timing;
     public Parameter[] parameters;
+    public bool isTargetOpposite;
+    public GridQuery relativeTargetGrid = new GridQuery();
 
     public List<BoardCoord> GetAvailableTargetCoord()
     {
-        List<BoardCoord> targetCoordList = new List<BoardCoord>();
+        BoardCoord center = BoardManager.Instance.isSkillReady ? BoardManager.Instance.selectedPiece.GetComponent<Piece>().pieceCoord : BoardCoord.NEGATIVE;
+        TeamColor targetTeamColor;
 
-        foreach (GameObject[] rows in BoardManager.Instance.boardStatus)
+        if (isTargetOpposite)
         {
-            foreach (GameObject pieceObject in rows)
+            if (GameManager.Instance.currentTurn == TeamColor.White)
             {
-                if (pieceObject == null)
-                {
-                    continue;
-                }
-
-                targetCoordList.Add(pieceObject.GetComponent<Piece>().pieceCoord);
+                targetTeamColor = TeamColor.Black;
+            }
+            else
+            {
+                targetTeamColor = TeamColor.White;
+            }
+        }
+        else
+        {
+            if (GameManager.Instance.currentTurn == TeamColor.White)
+            {
+                targetTeamColor = TeamColor.White;
+            }
+            else
+            {
+                targetTeamColor = TeamColor.Black;
             }
         }
 
-        return targetCoordList;
+        return relativeTargetGrid.TargetCoordinationQuery(center, targetTeamColor).ToList();
     }
 
     public void Operate(BoardCoord selectedBoardCoord)

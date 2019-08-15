@@ -18,6 +18,7 @@ public struct BoardCoord
     public static readonly BoardCoord DOWN_RIGHT = new BoardCoord(1, -1);
     public static readonly BoardCoord UP_LEFT = new BoardCoord(-1, 1);
     public static readonly BoardCoord DOWN_LEFT = new BoardCoord(-1, -1);
+    public static readonly BoardCoord NEGATIVE = new BoardCoord(-1, -1);
 
     private const float BOARD_CELL_LENGTH = 9.0f;
 

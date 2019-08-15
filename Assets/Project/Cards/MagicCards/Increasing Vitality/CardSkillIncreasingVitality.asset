@@ -20,3 +20,8 @@ MonoBehaviour:
     value: 5
   - target: 6
     value: 5
+  isTargetOpposite: 0
+  relativeTargetGrid:
+    isTargetingAll: 1
+    combinational:
+      sequentionals: []

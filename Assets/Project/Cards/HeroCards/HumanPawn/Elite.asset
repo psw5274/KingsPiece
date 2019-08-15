@@ -24,4 +24,4 @@ MonoBehaviour:
   statATK: 5
   heroModelPrefab: {fileID: 1916627097885876, guid: dd3681b0767b2744b809be37c8ce0cb0,
     type: 3}
-  skill: {fileID: 11400000, guid: 1e732cb42e141f74a8f702cbb54ba096, type: 2}
+  skill: {fileID: 11400000, guid: c19b9772d0b27de4a98f07a5f08eb546, type: 2}
