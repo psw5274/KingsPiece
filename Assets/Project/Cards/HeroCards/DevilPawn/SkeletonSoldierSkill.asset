@@ -15,7 +15,9 @@ MonoBehaviour:
   label: 
   duration: 0
   timing: 0
-  parameters: []
+  parameters:
+  - target: 7
+    value: 5
   isTargetOpposite: 1
   relativeTargetGrid:
     isTargetingAll: 0
@@ -37,3 +39,10 @@ MonoBehaviour:
         deltas:
         - col: 0
           row: -1
+  options:
+  - distance: 1
+    comparer: 0
+    skill: {fileID: 11400000, guid: a863f2283f0d36e478e2d116019ba14e, type: 2}
+  - distance: 2
+    comparer: 0
+    skill: {fileID: 11400000, guid: 40693d6a4c7c53440bf3d91a92e4e8b1, type: 2}
