@@ -188,6 +188,7 @@ public abstract class Piece : MonoBehaviour
 
         EffectManager.Instance.NotifyAttacking(this);
         EffectManager.Instance.NotifyDamaged(target);
+        EffectManager.Instance.NotifyAnyAction(this);
         return true;
     }
 
@@ -207,6 +208,7 @@ public abstract class Piece : MonoBehaviour
                 isMovedFirst = true;
 
             EffectManager.Instance.NotifyMoved(this);
+            EffectManager.Instance.NotifyAnyAction(this);
             return true;
         }
         else

@@ -12,6 +12,7 @@ public class GridQuery
         private class Sequentional
         {
             [SerializeField]
+            [Range(1, 8)]
             private int repeat = 1;
             [SerializeField]
             private BoardCoord[] deltas = null;
@@ -33,7 +34,7 @@ public class GridQuery
                             continue;
                         }
                         Piece piece = gameobject.GetComponent<Piece>();
-                        if (piece.teamColor != targetColor)
+                        if (targetColor != TeamColor.Both && piece.teamColor != targetColor)
                         {
                             continue;
                         }
@@ -99,7 +100,7 @@ public class GridQuery
                     continue;
                 }
                 Piece piece = pieceObject.GetComponent<Piece>();
-                if (piece.teamColor != targetColor)
+                if (targetColor != TeamColor.Both && piece.teamColor != targetColor)
                 {
                     continue;
                 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TeamColor : int { White = 1, Black = -1 }
+public enum TeamColor : int { White = 1, Black = -1 , Both = 0 }
 
 enum PieceEnum
 {
@@ -189,7 +189,7 @@ public class BoardManager : MonoBehaviour
         else if (isPieceSelected && selectedPieceScript.IsDetinationAvailable(selectedBoardCoord))
         {
             selectedPieceScript.Move(selectedBoardCoord);
-            GameManager.Instance.isMoved = true;
+            GameManager.Instance.movableCount -= 1;
         }
         // 공격
         else if (isPieceSelected && selectedPieceScript.IsAttackAvailable(selectedBoardCoord))
@@ -197,7 +197,7 @@ public class BoardManager : MonoBehaviour
             selectedPieceScript.Attack(selectedBoardCoord);
             selectedPieceScript.UpdateStatus();
 
-            GameManager.Instance.isMoved = true;
+            GameManager.Instance.movableCount -= 1;
         }
         // 피스 선택
         else
@@ -206,7 +206,7 @@ public class BoardManager : MonoBehaviour
                 return;
             selectedPieceScript = selectedPiece.GetComponent<Piece>();
 
-            if (!GameManager.Instance.isMoved)
+            if (GameManager.Instance.movableCount < 1)
             {
                 selectedPieceScript.GetAvailableDestination();
                 HighlightBoard(selectedPieceScript.moveDestinationList, Action.Move);

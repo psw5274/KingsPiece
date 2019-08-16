@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24933ea74ef92a940914be9cc86fa7c3, type: 3}
+  m_Name: OrcSkillDistanceDamage
+  m_EditorClassIdentifier: 
+  label: 
+  duration: 0
+  timing: 0
+  parameters: []
+  team: 0
+  relativeTargetGrid:
+    isTargetingAll: 0
+    combinational:
+      sequentionals: []
+  options:
+  - distance: 1
+    comparer: 0
+    skill: {fileID: 11400000, guid: 0ede04fb050ac354a96dfe78cd9135fe, type: 2}
+  - distance: 2
+    comparer: 0
+    skill: {fileID: 11400000, guid: d6f417b25e6c4774e88c76b3e73042a5, type: 2}
+  - distance: 3
+    comparer: 0
+    skill: {fileID: 11400000, guid: e216760476da83b40a1283de38062258, type: 2}
+  - distance: 4
+    comparer: 0
+    skill: {fileID: 11400000, guid: 1cacde657d425514b8d6aa1ced66f778, type: 2}
+  - distance: 5
+    comparer: 0
+    skill: {fileID: 11400000, guid: 5de0107bbf75e7f478e1c1cad542dca1, type: 2}
+  - distance: 6
+    comparer: 0
+    skill: {fileID: 11400000, guid: 14888d47b6f5c4448b1b0138682e17d8, type: 2}
+  - distance: 7
+    comparer: 0
+    skill: {fileID: 11400000, guid: 59ce72c1d4b09b34aae99ba5aa777b71, type: 2}

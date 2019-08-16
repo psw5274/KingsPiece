@@ -15,9 +15,15 @@ MonoBehaviour:
   label: 
   duration: 0
   timing: 0
-  parameters: []
-  isTargetOpposite: 0
+  parameters:
+  - target: 4
+    value: -1
+  team: 0
   relativeTargetGrid:
     isTargetingAll: 0
     combinational:
-      sequentionals: []
+      sequentionals:
+      - repeat: 1
+        deltas:
+        - col: 0
+          row: 0

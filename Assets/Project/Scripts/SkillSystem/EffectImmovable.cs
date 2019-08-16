@@ -1,13 +1,18 @@
-﻿public class EffectImmovable : Effect
+﻿using UnityEngine;
+
+public class EffectImmovable : Effect
 {
-    public EffectImmovable(Piece target, Skill.ApplyingTiming timing, int remainDuration)
+    private int value;
+
+    public EffectImmovable(Piece target, Skill.ApplyingTiming timing, int remainDuration, int value)
         : base(target, timing, remainDuration)
     {
+        this.value = value;
     }
 
     public override void Active()
     {
-        target.movableCount = 0;
+        target.movableCount = Mathf.Clamp(target.movableCount - value, 0, int.MaxValue);
     }
 
     public override void Deactive()

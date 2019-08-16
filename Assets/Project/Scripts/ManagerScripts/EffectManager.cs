@@ -27,20 +27,41 @@ public class EffectManager : MonoBehaviour
     {
 #if CONSOLE_LOGGING
         {
-            string DEBUG_STRING =
-                $"\n {target} at ({target.pieceCoord.col}, {target.pieceCoord.row}) now has Effect" +
+            string DEBUG_STRING = $"";
+            if (target == null)
+            {
+                DEBUG_STRING += $"\ntarget is null";
+            }
+            else
+            {
+                DEBUG_STRING += $"\n {target} at ({target.pieceCoord.col}, {target.pieceCoord.row}) now has Effect";
+            }
+            if (skill == null)
+            {
+                DEBUG_STRING += $"\nskill is null";
+            }
+            else
+            {
+                DEBUG_STRING +=
                 $"\n Skill" +
                 $"\n - label : {skill.label}" +
                 $"\n - timing : {skill.timing.ToString()}" +
                 $"\n - duration : {skill.duration}" +
                 $"\n - parameters :";
-            foreach (var parameter in skill.parameters)
-            {
-                DEBUG_STRING += $"\n   * {parameter.target.ToString()} : {parameter.value} * ";
+                foreach (var parameter in skill.parameters)
+                {
+                    DEBUG_STRING += $"\n   * {parameter.target.ToString()} : {parameter.value} * ";
+                }
             }
             Debug.Log(DEBUG_STRING);
         }
 #endif
+
+        if (skill == null)
+        {
+            return;
+        }
+
         foreach (Skill.Parameter parameter in skill.parameters)
         {
             Effect effect = null;
@@ -59,7 +80,7 @@ public class EffectManager : MonoBehaviour
                     effect = new EffectHPMultiplication(target, skill.timing, skill.duration, parameter.value);
                     break;
                 case Skill.Parameter.ModifyTarget.Movability:
-                    effect = new EffectImmovable(target, skill.timing, skill.duration);
+                    effect = new EffectImmovable(target, skill.timing, skill.duration, parameter.value);
                     break;
                 case Skill.Parameter.ModifyTarget.Unbeatability:
                     effect = new EffectUnbeatable(target, skill.timing, skill.duration);
@@ -70,6 +91,11 @@ public class EffectManager : MonoBehaviour
                 case Skill.Parameter.ModifyTarget.HPHeal:
                     effect = new EffectHPHeal(target, skill.timing, skill.duration, parameter.value);
                     break;
+                case Skill.Parameter.ModifyTarget.ActorPositionModification:
+                    effect = new EffectActorPositionModification(target, skill.timing, skill.duration);
+                    break;
+                default:
+                    continue;
             }
 
             if (skill.timing == Skill.ApplyingTiming.Instant)
@@ -79,8 +105,6 @@ public class EffectManager : MonoBehaviour
 
             effects.Add(effect);
         }
-
-        target.UpdateStatus();
     }
 
     public void NotifyAttacking(Piece target)
@@ -159,7 +183,15 @@ public class EffectManager : MonoBehaviour
                     "\n EXPIRED EFFECTS";
                 foreach (var effect in expireds)
                 {
-                    DEBUG_STRING += $"\n * {effect.GetType()} effect to {effect.target} at ({effect.target.pieceCoord.col}, {effect.target.pieceCoord.row})";
+                    DEBUG_STRING += $"\n * {effect.GetType()} effect to {effect.target}";
+                    if (effect.target == null)
+                    {
+                        DEBUG_STRING += $"target and target is null";
+                    }
+                    else
+                    {
+                        DEBUG_STRING += $" at ({effect.target.pieceCoord.col}, {effect.target.pieceCoord.row})";
+                    }
                 }
                 Debug.Log(DEBUG_STRING);
             }
@@ -172,5 +204,22 @@ public class EffectManager : MonoBehaviour
             effects = effects.AsEnumerable().Except(expireds).ToList();
         }
         effects.ForEach(effect => --effect.remainDuration);
+    }
+
+    public void NotifyAnyAction(Piece target)
+    {
+#if CONSOLE_LOGGING
+        {
+            string DEBUG_STRING = $"Effect manager notified {target} do some action";
+            Debug.Log(DEBUG_STRING);
+        }
+#endif
+        var correspondings = effects.Where(effect => effect.timing == Skill.ApplyingTiming.AnyAction)
+                               .Where(effect => effect.target.Equals(target));
+
+        foreach (var effect in correspondings)
+        {
+            effect.Active();
+        }
     }
 }

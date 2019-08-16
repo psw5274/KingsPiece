@@ -9,19 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b8eae5854e3e964f841b6deb9bdc8a7, type: 3}
-  m_Name: DevilKingSKill
+  m_Script: {fileID: 11500000, guid: e8d4b9d7ea8ec09468c85002aa8b8371, type: 3}
+  m_Name: OrcSkillDistanceDamage7
   m_EditorClassIdentifier: 
   label: 
-  duration: 3
+  duration: 0
   timing: 0
   parameters:
-  - target: 0
-    value: 10
-  - target: 2
-    value: 10
+  - target: 7
+    value: 30
   team: 0
   relativeTargetGrid:
-    isTargetingAll: 1
+    isTargetingAll: 0
     combinational:
       sequentionals: []
+  skillForReaction: {fileID: 11400000, guid: d67a165bb0dc6494c8b21ad3c3134aef, type: 2}

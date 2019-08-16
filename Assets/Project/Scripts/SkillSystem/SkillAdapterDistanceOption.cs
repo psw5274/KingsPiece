@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Skill Adapter", menuName = "Skill Adapter", order = 0)]
-class SkillAdapterDistanceOption : Skill
+[CreateAssetMenu(fileName = "New Skill With Distance Option", menuName = "Skill Adapter/Distance Option", order = 0)]
+public class SkillAdapterDistanceOption : Skill
 {
     [Serializable]
     private class DistanceOption : IComparable<DistanceOption>
@@ -45,7 +45,7 @@ class SkillAdapterDistanceOption : Skill
         }
 
         var option = selectedOptions.Max();
-        EffectManager.Instance.AddEffect(target, option.skill);
+        option.skill.Operate(target.pieceCoord);
     }
 
     private bool DistanceCompare(DistanceOption option, int distance)

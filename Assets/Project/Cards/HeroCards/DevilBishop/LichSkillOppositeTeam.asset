@@ -10,17 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b8eae5854e3e964f841b6deb9bdc8a7, type: 3}
-  m_Name: DevilKingSKill
+  m_Name: LichSkillOppositeTeam
   m_EditorClassIdentifier: 
   label: 
-  duration: 3
-  timing: 0
+  duration: -1
+  timing: 3
   parameters:
-  - target: 0
-    value: 10
-  - target: 2
-    value: 10
-  team: 0
+  - target: 7
+    value: 5
+  team: 2
   relativeTargetGrid:
     isTargetingAll: 1
     combinational:

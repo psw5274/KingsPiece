@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public TeamColor currentTurn { get; private set; } = TeamColor.White;
 
     public bool isSkillUsed = false;
-    public bool isMoved = false;
+    public int movableCount = 1;
 
     private static GameManager instance = null;
     public static GameManager Instance
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         CardManager.Instance.ShowPlayerHands();
         EffectManager.Instance.NotifyTurnPassed();
         isSkillUsed = false;
-        isMoved = false;
+        movableCount = 1;
     }
 
     public void DrawCard()

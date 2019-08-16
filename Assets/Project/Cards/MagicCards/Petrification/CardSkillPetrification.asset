@@ -18,7 +18,7 @@ MonoBehaviour:
   parameters:
   - target: 4
     value: 0
-  isTargetOpposite: 1
+  team: 1
   relativeTargetGrid:
     isTargetingAll: 1
     combinational:

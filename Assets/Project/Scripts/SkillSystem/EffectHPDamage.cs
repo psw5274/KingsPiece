@@ -11,6 +11,7 @@
     public override void Active()
     {
         target.CurrentHP -= value;
+        target.UpdateStatus();
     }
 
     public override void Deactive()
