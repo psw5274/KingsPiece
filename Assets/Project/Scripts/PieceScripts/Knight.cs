@@ -59,8 +59,6 @@ public class Knight : Piece
             boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
         }
 
-        EffectManager.Instance.NotifyAttacking(this);
-        EffectManager.Instance.NotifyDamaged(target);
         return true;
     }
 }

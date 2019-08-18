@@ -44,7 +44,6 @@ public class GameManager : MonoBehaviour
         PlayerManager.Instance.ChangePlayerTeam();
         //
         CardManager.Instance.ShowPlayerHands();
-        EffectManager.Instance.NotifyTurnPassed();
         isSkillUsed = false;
         movableCount = 1;
     }

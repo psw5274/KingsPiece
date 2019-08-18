@@ -186,9 +186,6 @@ public abstract class Piece : MonoBehaviour
             boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
         }
 
-        EffectManager.Instance.NotifyAttacking(this);
-        EffectManager.Instance.NotifyDamaged(target);
-        EffectManager.Instance.NotifyAnyAction(this);
         return true;
     }
 
@@ -207,8 +204,6 @@ public abstract class Piece : MonoBehaviour
             if (!isMovedFirst)
                 isMovedFirst = true;
 
-            EffectManager.Instance.NotifyMoved(this);
-            EffectManager.Instance.NotifyAnyAction(this);
             return true;
         }
         else

@@ -1,81 +1,52 @@
-﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using Coordination.Query;
+using System;
+using System.Linq;
 
-[CreateAssetMenu(fileName = "New Skill", menuName = "Skill", order = 0)]
-public class Skill : ScriptableObject
+namespace SkillSystem
 {
-    public enum ApplyingTiming 
-    { 
-        Instant, 
-        Attack, 
-        Damaged, 
-        Moved, 
-        TurnPassed,
-        AnyAction
-    }
-
-    public enum ApplyingTeam
+    public class Skill : ScriptableObject
     {
-        Self,
-        Opposite,
-        Both
-    }
-
-    [Serializable]
-    public class Parameter
-    {
-        public enum ModifyTarget
+        [Serializable]
+        public struct AffactationGroup
         {
-            HPAddition,
-            HPMultiplication,
-            ATKAddition,
-            ATKMultiplication,
-            Movability,
-            Unbeatability,
-            HPHeal,
-            HPDamage,
-            ActorPositionModification
+            public CoordinationQuery query;
+            public Affactation affactation;
         }
 
-        public ModifyTarget target;
-        public int value;
-    }
+        public AffactationGroup[] groups;
 
-    public string label;
-    public int duration;
-    public ApplyingTiming timing;
-    public Parameter[] parameters;
-    public ApplyingTeam team;
-    public GridQuery relativeTargetGrid = new GridQuery();
-
-    public virtual List<BoardCoord> GetAvailableTargetCoord()
-    {
-        GameObject piece = BoardManager.Instance.selectedPiece;
-        BoardCoord center = piece == null ? BoardCoord.NEGATIVE : piece.GetComponent<Piece>().pieceCoord;
-        TeamColor targetTeamColor;
-
-        switch (team)
+        public void Operate(BoardCoord coordination)
         {
-            case ApplyingTeam.Self:
-                targetTeamColor = GameManager.Instance.currentTurn;
-                break;
-            case ApplyingTeam.Opposite:
-                targetTeamColor = GameManager.Instance.currentTurn == TeamColor.White ? TeamColor.Black : TeamColor.White;
-                break;
-            default:
-                targetTeamColor = TeamColor.Both;
-                break;
+            var apq = new AffactationPriorityQueue();
+
+            foreach (var group in groups)
+            {
+                if (!group.query.Exist(coordination))
+                {
+                    continue;
+                }
+
+                group.affactation.Operate(apq);
+            }
         }
 
-        return relativeTargetGrid.TargetCoordinationQuery(center, targetTeamColor).ToList();
-    }
 
-    public virtual void Operate(BoardCoord selectedBoardCoord)
-    {
-        GameObject gameobject = BoardManager.Instance.boardStatus[selectedBoardCoord.col][selectedBoardCoord.row];
-        Piece target = gameobject == null ? null : gameobject.GetComponent<Piece>();
-        EffectManager.Instance.AddEffect(target, this);
+        public List<BoardCoord> GetAvailableTargetCoord()
+        {
+            List<BoardCoord> result = new List<BoardCoord>();
+
+            foreach(var group in groups)
+            {
+                result = result.Concat(group.
+                                       query.
+                                       GetQueriedList().
+                                       positions.
+                                       Cast<BoardCoord>()).ToList();
+            }
+
+            return result;
+        }
     }
 }

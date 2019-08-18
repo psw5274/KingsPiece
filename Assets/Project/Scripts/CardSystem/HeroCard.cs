@@ -14,7 +14,7 @@ public class HeroCard : BasicCardData
 
     public GameObject heroModelPrefab;
 
-    public Skill skill;
+    public SkillSystem.Skill skill;
 
     
     public void Awake()
