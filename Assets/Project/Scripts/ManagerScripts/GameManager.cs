@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public GameObject chessBoard;
     public Text winningText;
-    public TeamColor currentTurn { get; private set; } = TeamColor.White;
+    public static TeamColor currentTurn { get; private set; } = TeamColor.White;
 
     public bool isSkillUsed = false;
     public bool isMoved = false;
@@ -29,31 +29,50 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     public void SetWinner(TeamColor winTeam)
     {
         winningText.text = winTeam.ToString() + " Win!!";
         winningText.gameObject.SetActive(true);
     }
 
-    public void NewTurn()
+    public void EndTurn()
     {
-        currentTurn = (currentTurn == TeamColor.Black) ? TeamColor.White : TeamColor.Black;
         BoardManager.Instance.ResetBoardHighlighter();
         BoardManager.Instance.ResetPiecesMovableCount();
-        PlayerManager.Instance.ChangePlayerTeam();
-        //
-        CardManager.Instance.ShowPlayerHands();
+
+        ChangeTurn();
+    }
+
+    private void ChangeTurn()
+    {
+        currentTurn = (currentTurn == TeamColor.Black) ? TeamColor.White : TeamColor.Black;
+
+        // PlayerManager.Instance.ChangePlayerTeam();
+
+        NewTurn();
+    }
+
+    private void NewTurn()
+    {
+    // 카드 드로우, 버프 등의 함수 호출 해주자
+        
+    //CardManager.Instance.ShowPlayerHands();
         EffectManager.Instance.NotifyTurnPassed();
+
         isSkillUsed = false;
         isMoved = false;
     }
 
-    public void DrawCard()
+    public void SetPlayer()
     {
+        CardManager.Instance.ShowPlayerHands();
 
     }
 
+    public void Start()
+    {
+        SetPlayer();
+    }
 }
 
 

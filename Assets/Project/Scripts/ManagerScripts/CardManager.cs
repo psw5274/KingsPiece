@@ -44,7 +44,7 @@ public class CardManager : MonoBehaviour {
 
     public void UseCard(BasicCardData usedCard)
     {
-        List<BasicCardData> playerHands = GameManager.Instance.currentTurn == TeamColor.White ?
+        List<BasicCardData> playerHands = GameManager.currentTurn == TeamColor.White ?
                                           whiteHands : blackHands;
         playerHands.Remove(usedCard);
         ShowPlayerHands();
@@ -52,7 +52,7 @@ public class CardManager : MonoBehaviour {
 
     public void ShowPlayerHands()
     {
-        List<BasicCardData> hands = PlayerManager.Instance.playerTeam == TeamColor.White ?
+        List<BasicCardData> hands = PlayerManager.playerTeam == TeamColor.White ?
                                           whiteHands : blackHands;
 
         //  최적화 필수
@@ -77,7 +77,7 @@ public class CardManager : MonoBehaviour {
         }
 
         // opposite player's hand's back
-        List<BasicCardData> oppositeHands = PlayerManager.Instance.playerTeam == TeamColor.White ?
+        List<BasicCardData> oppositeHands = PlayerManager.playerTeam == TeamColor.White ?
                                             blackHands : whiteHands;
 
         foreach (GameObject card in oppositeCardList)

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public TeamColor playerTeam;
+    [SerializeField]
+    public static TeamColor playerTeam;
 
     private static PlayerManager instance = null;
     public static PlayerManager Instance
@@ -28,9 +29,18 @@ public class PlayerManager : MonoBehaviour
         playerTeam = TeamColor.White;
     }
 
+
+    public static void SetPlayerTeamColor(TeamColor teamColor)
+    {
+        playerTeam = teamColor;
+    }
+
+    /* No more use
+     * 
     public void ChangePlayerTeam()
     {
         playerTeam = (playerTeam == TeamColor.White) ? TeamColor.Black : TeamColor.White;
         CameraManager.Instance.RotateCamera();
     }
+    */
 }

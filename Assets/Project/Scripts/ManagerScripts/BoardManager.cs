@@ -128,7 +128,7 @@ public class BoardManager : MonoBehaviour
     {
         selectedPiece = boardStatus[boardCoord.col][boardCoord.row];
         if (selectedPiece == null ||
-            selectedPiece.GetComponent<Piece>().teamColor != GameManager.Instance.currentTurn)
+            selectedPiece.GetComponent<Piece>().teamColor != GameManager.currentTurn)
         {
             isPieceSelected = false;
             return false;
