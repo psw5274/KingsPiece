@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
     public void SetPlayer()
     {
         CardManager.Instance.ShowPlayerHands();
-
+        CameraManager.Instance.SetCamera();
     }
 
     public void Start()

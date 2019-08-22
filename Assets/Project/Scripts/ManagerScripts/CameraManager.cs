@@ -46,4 +46,11 @@ public class CameraManager : MonoBehaviour {
                                            -child.localScale.z);
         }
 	}
+
+    public void SetCamera()
+    {
+        if(PlayerManager.playerTeam == TeamColor.Black)
+            RotateCamera();
+
+    }
 }
