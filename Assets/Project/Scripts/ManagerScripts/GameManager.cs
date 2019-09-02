@@ -42,9 +42,7 @@ public class GameManager : MonoBehaviour
         BoardManager.Instance.ResetBoardHighlighter();
         BoardManager.Instance.ResetPiecesMovableCount();
         PlayerManager.Instance.ChangePlayerTeam();
-        //
         CardManager.Instance.ShowPlayerHands();
-        EffectManager.Instance.NotifyTurnPassed();
         isSkillUsed = false;
         isMoved = false;
     }

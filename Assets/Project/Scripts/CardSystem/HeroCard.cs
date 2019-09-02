@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
+using SkillSystem;
+using PieceSystem;
 
 public enum HeroCamp { Human, Devil }
-public enum PieceClass { King, Queen, Bishop, Rook, Knight, Pawn };
 [CreateAssetMenu(fileName = "HeroCard", menuName = "Card/HeroCard")]
 public class HeroCard : BasicCardData
 {
@@ -14,9 +12,8 @@ public class HeroCard : BasicCardData
 
     public GameObject heroModelPrefab;
 
-    protected List<object> skillList = new List<object>();
+    public PieceSkill[] skills;
 
-    
     public void Awake()
     {
     }

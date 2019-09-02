@@ -18,9 +18,10 @@ MonoBehaviour:
   cardBackImage: {fileID: 21300000, guid: a27fb40f67f9a1242ac54e840096f2e3, type: 3}
   cardPortraitImage: {fileID: 0}
   cardGrade: 0
-  heroClass: 5
+  heroClass: {fileID: 11400000, guid: 9b3d5a76c13b73e40b3292d052a4aac2, type: 2}
   heroCamp: 0
   statHP: 15
   statATK: 5
   heroModelPrefab: {fileID: 1916627097885876, guid: dd3681b0767b2744b809be37c8ce0cb0,
     type: 3}
+  skills: []
