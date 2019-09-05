@@ -2,8 +2,12 @@ using UnityEngine;
 
 namespace BoardSystem.Query
 {
-    public abstract class Condition : ScriptableObject
+    [CreateAssetMenu(fileName = "Condition Pass", menuName = "Board Layer/Condition/Pass", order = 1)]
+    public class Condition : ScriptableObject
     {
-        public abstract bool Check(BoardCoord coordination);
+        public virtual bool Check(BoardCoord coordination)
+        {
+            return true;
+        }
     }
 }

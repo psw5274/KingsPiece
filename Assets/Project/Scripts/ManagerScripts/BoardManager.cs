@@ -69,12 +69,12 @@ public class BoardManager : MonoBehaviour
 
     public Piece GetPieceAt(BoardCoord position)
     {
-        return GetPieceAt(position.col, position.row);
-    }
+        if (position.IsAvailable() == false)
+        {
+            return null;
+        }
 
-    public Piece GetPieceAt(int col, int row)
-    {
-        var coordination = boardStatus[col][row];
+        var coordination = boardStatus[position.col][position.row];
 
         if (coordination == null)
         {
@@ -84,6 +84,11 @@ public class BoardManager : MonoBehaviour
         {
             return coordination.GetComponent<Piece>();
         }
+    }
+
+    public Piece GetPieceAt(int col, int row)
+    {
+        return GetPieceAt(new BoardCoord(col, row));
     }
 
     /// <summary>
@@ -102,18 +107,19 @@ public class BoardManager : MonoBehaviour
         {
             boardStatus[i][0] =
             Instantiate(heroCards[i].heroModelPrefab,
-                        BoardCoord.GetBoardCoordVector3(0, i),
+                        BoardCoord.GetBoardCoordVector3(i, 0),
                         heroCards[i].heroModelPrefab.transform.rotation,
                         pieceZone.transform);
             boardStatus[i][0].GetComponent<Piece>().Initialize(TeamColor.White, heroCards[i]);
+            boardStatus[i][0].GetComponent<Piece>().MovePosition(new BoardCoord(i, 0));
 
             boardStatus[i][NUM_BOARD_ROW - 1] =
             Instantiate(heroCards[i + NUM_PIECE_PREFABS / 2].heroModelPrefab,
-                        BoardCoord.GetBoardCoordVector3(NUM_BOARD_COL - 1, i),
+                        BoardCoord.GetBoardCoordVector3(i, NUM_BOARD_COL - 1),
                         heroCards[i + NUM_PIECE_PREFABS / 2].heroModelPrefab.transform.rotation,
                         pieceZone.transform);
-            boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().Initialize(TeamColor.Black,
-                                                                               heroCards[i + NUM_PIECE_PREFABS / 2]);
+            boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().Initialize(TeamColor.Black, heroCards[i + NUM_PIECE_PREFABS / 2]);
+            boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().MovePosition(new BoardCoord(i, NUM_BOARD_COL - 1));
         }
 
         // code for when num of user's piece set are 18
@@ -123,18 +129,19 @@ public class BoardManager : MonoBehaviour
             {
                 boardStatus[i][1] =
                 Instantiate(heroCards[8].heroModelPrefab,
-                        BoardCoord.GetBoardCoordVector3(1, i),
+                        BoardCoord.GetBoardCoordVector3(i, 1),
                         heroCards[8].heroModelPrefab.transform.rotation,
                         pieceZone.transform);
                 boardStatus[i][1].GetComponent<Piece>().Initialize(TeamColor.White, heroCards[8]);
+                boardStatus[i][1].GetComponent<Piece>().MovePosition(new BoardCoord(i, 1));
 
                 boardStatus[i][NUM_BOARD_ROW - 2] =
                 Instantiate(heroCards[8 + NUM_PIECE_PREFABS / 2].heroModelPrefab,
-                            BoardCoord.GetBoardCoordVector3(NUM_BOARD_COL - 2, i),
+                            BoardCoord.GetBoardCoordVector3(i, NUM_BOARD_COL - 2),
                             heroCards[8 + NUM_PIECE_PREFABS / 2].heroModelPrefab.transform.rotation,
                             pieceZone.transform);
-                boardStatus[i][NUM_BOARD_ROW - 2].GetComponent<Piece>().Initialize(TeamColor.Black,
-                                                                                    heroCards[8 + NUM_PIECE_PREFABS / 2]);
+                boardStatus[i][NUM_BOARD_ROW - 2].GetComponent<Piece>().Initialize(TeamColor.Black, heroCards[8 + NUM_PIECE_PREFABS / 2]);
+                boardStatus[i][NUM_BOARD_ROW - 2].GetComponent<Piece>().MovePosition(new BoardCoord(i, NUM_BOARD_COL - 2));
 
             }
         }
@@ -173,6 +180,8 @@ public class BoardManager : MonoBehaviour
     {
         BoardCoord clickedCoord = GetClickedCoord();
         if (!clickedCoord.IsAvailable())
+
+
             return;
 
         ResetBoardHighlighter();
@@ -195,8 +204,12 @@ public class BoardManager : MonoBehaviour
         // 이동
         else if (isPieceSelected && selectedPieceScript.GetMovablePositions().Contains(selectedBoardCoord))
         {
+            BoardManager.Instance.boardStatus[selectedPieceScript.GetPosition().col][selectedPieceScript.GetPosition().row] = null;
+            BoardManager.Instance.boardStatus[selectedBoardCoord.col][selectedBoardCoord.row] = selectedPiece;
+            selectedPiece.transform.position = selectedBoardCoord.GetBoardCoardVector3();
             selectedPieceScript.MovePosition(selectedBoardCoord);
 
+            selectedPieceScript.SetStatus(Piece.StatusFlag.Moved);
             GameManager.Instance.isMoved = true;
         }
         // 공격

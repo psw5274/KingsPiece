@@ -143,6 +143,10 @@ namespace PieceSystem
         {
             return status;
         }
+        public void SetStatus(StatusFlag flag)
+        {
+            status |= flag;
+        }
 
         #endregion
     }

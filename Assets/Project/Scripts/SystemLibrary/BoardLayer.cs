@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using PieceSystem;
 using UnityEngine;
 
 namespace BoardSystem
@@ -7,6 +8,6 @@ namespace BoardSystem
     [Serializable]
     public abstract class BoardLayer : ScriptableObject
     {
-        public abstract BoardCoord[] GetCoordinations();
+        public abstract BoardCoord[] GetCoordinations(Piece self);
     }
 }

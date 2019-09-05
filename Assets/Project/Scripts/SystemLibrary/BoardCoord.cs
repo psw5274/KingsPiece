@@ -53,9 +53,9 @@ public struct BoardCoord
 
     public static Vector3 GetBoardCoordVector3(int x, int z)
     {
-        return new Vector3((z - 3.5f) * BOARD_CELL_LENGTH,
+        return new Vector3((x - 3.5f) * BOARD_CELL_LENGTH,
                             7.21f,
-                            (x - 3.5f) * BOARD_CELL_LENGTH);
+                            (z - 3.5f) * BOARD_CELL_LENGTH);
     }
 
     public BoardCoord GetDirectionalCoord()
