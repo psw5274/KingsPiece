@@ -217,6 +217,14 @@ public class BoardManager : MonoBehaviour
         {
             var targetPiece = GetPieceAt(selectedBoardCoord);
             targetPiece.DamageHP(selectedPieceScript.GetCurrentATK());
+            targetPiece.UpdateStatus();
+
+            if ((targetPiece.GetStatus() & Piece.StatusFlag.Dead) == Piece.StatusFlag.Dead)
+            {
+                boardStatus[targetPiece.GetPosition().col][targetPiece.GetPosition().row] = selectedPiece;
+                selectedPiece.transform.position = targetPiece.GetPosition().GetBoardCoardVector3();
+                selectedPieceScript.MovePosition(targetPiece.GetPosition());
+            }
 
             GameManager.Instance.isMoved = true;
         }

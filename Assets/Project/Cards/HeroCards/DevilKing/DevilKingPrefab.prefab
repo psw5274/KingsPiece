@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4343816534555260}
   - component: {fileID: 95322641265961092}
   - component: {fileID: 1138068314749556884}
+  - component: {fileID: -8258048039038362872}
   m_Layer: 0
   m_Name: DevilKingPrefab
   m_TagString: Untagged
@@ -63,6 +64,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50948e6d14245ff49926e9780467fe9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-8258048039038362872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015800932355428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd7fcc902f98b0342956631ea6dd9eae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1019143466475636

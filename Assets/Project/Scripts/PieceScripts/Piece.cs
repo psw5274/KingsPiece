@@ -33,8 +33,16 @@ namespace PieceSystem
 
         public void UpdateStatus()
         {
-            // TODO(@Tetramad)
-            throw new System.NotImplementedException();
+            if (HPCurrent <= 0)
+            {
+                // TODO(@Tetramad) HP zero callback call
+
+                if (HPCurrent <= 0)
+                {
+                    status |= StatusFlag.Dead;
+                    gameObject.SetActive(false);
+                }
+            }
         }
 
         public BoardCoord[] GetMovablePositions()
