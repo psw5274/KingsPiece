@@ -1,3 +1,4 @@
+using BoardSystem;
 using UnityEngine;
 
 namespace PieceSystem
@@ -5,14 +6,17 @@ namespace PieceSystem
     [CreateAssetMenu(fileName = "BishopClass", menuName = "Piece Class/Bishop", order = 3)]
     public class BishopClass : PieceClass
     {
+        public BoardLayer attack;
+        public BoardLayer move;
+
         public override BoardCoord[] GetAttackablePositions(Piece self)
         {
-            throw new System.NotImplementedException();
+            return attack.GetCoordinations(self);
         }
 
         public override BoardCoord[] GetMovablePositions(Piece self)
         {
-            throw new System.NotImplementedException();
+            return move.GetCoordinations(self);
         }
     }
 }

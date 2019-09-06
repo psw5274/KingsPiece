@@ -15,7 +15,16 @@ namespace BoardSystem
 
         public override BoardCoord[] GetCoordinations(Piece self)
         {
-            BoardCoord[] coords = new BoardCoord[] { self.GetPosition() + coordination };
+            BoardCoord[] coords;
+
+            if ((self.GetPosition() + coordination).IsAvailable())
+            {
+                coords = new BoardCoord[] { self.GetPosition() + coordination };
+            }
+            else
+            {
+                coords = new BoardCoord[] { };
+            }
 
 #if DEBUG_ALL || DEBUG_QUERY_LAYER
             string DEBUG_STRING = $"Single Layer \"{name}\"";

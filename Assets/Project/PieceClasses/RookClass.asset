@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 935de820d4f9bf046b45d263a3794fd9, type: 3}
   m_Name: RookClass
   m_EditorClassIdentifier: 
+  attack: {fileID: 11400000, guid: daa5651b757465747b4a72cebf0209fb, type: 2}
+  move: {fileID: 11400000, guid: ab67d20fa9d131940a8595d4df10df3a, type: 2}

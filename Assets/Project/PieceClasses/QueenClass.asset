@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e3919e73e4577547920085a90940320, type: 3}
   m_Name: QueenClass
   m_EditorClassIdentifier: 
+  attack: {fileID: 11400000, guid: 6b8448bc2fa952e48b04044796d4a953, type: 2}
+  move: {fileID: 11400000, guid: 2caa54a618027764b823d92121633127, type: 2}

@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e95e023310121bf4992c0a3a615a85ae, type: 3}
   m_Name: BishopClass
   m_EditorClassIdentifier: 
+  attack: {fileID: 11400000, guid: f63ef00dcaedf134c903437e7060cf1d, type: 2}
+  move: {fileID: 11400000, guid: 0380f370008d93148b4f8af2b27d60f3, type: 2}

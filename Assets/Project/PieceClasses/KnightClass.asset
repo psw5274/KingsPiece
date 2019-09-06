@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00381e2910984dd4099f87500b39b543, type: 3}
   m_Name: KnightClass
   m_EditorClassIdentifier: 
+  attack: {fileID: 11400000, guid: 05db46f29d916b3469f348be7687630e, type: 2}
+  move: {fileID: 11400000, guid: c9a0c1265f8b7814b89cfc347b89bff3, type: 2}

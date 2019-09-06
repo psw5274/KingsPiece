@@ -1,4 +1,3 @@
-
 using System;
 using System.Linq;
 using BoardSystem.Query;
@@ -21,7 +20,7 @@ namespace BoardSystem
             foreach (var layer in layers)
             {
                 var temp = layer.GetCoordinations(self)
-                              .Where(coordination => condition.Check(coordination));
+                              .Where(coordination => condition.Check(self, coordination));
 
                 if (temp.Count() == 0)
                 {

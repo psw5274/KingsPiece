@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7787708126dae084fa581dccadc0051e, type: 3}
+  m_Name: KingAttack
+  m_EditorClassIdentifier: 
+  layers:
+  - {fileID: 11400000, guid: 64ce3ae90cbd85440b410969f8f9b7c7, type: 2}
+  - {fileID: 11400000, guid: f9eb67997dc32e54c9f331459e0b80e4, type: 2}
+  - {fileID: 11400000, guid: 249db4cf574b46640a1c2d19a5790ff0, type: 2}
+  - {fileID: 11400000, guid: 86df57b9244a75e409519a9a381a1e31, type: 2}
+  - {fileID: 11400000, guid: fe981cd5a285eea4b8dbcf001231e649, type: 2}
+  - {fileID: 11400000, guid: ff41a42bf8b942d49a996d79327b0b90, type: 2}
+  - {fileID: 11400000, guid: c01e57da228e6794298f31e3a91e77b3, type: 2}
+  - {fileID: 11400000, guid: 513ea4a24bba7ba4099c8c68f09f32c4, type: 2}
+  condition: {fileID: 11400000, guid: 654592d753c36c34b8f9be979a9e42eb, type: 2}

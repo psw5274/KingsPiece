@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54227791264207e44992203ab0d75932, type: 3}
   m_Name: PawnBlackClass
   m_EditorClassIdentifier: 
-  attack: {fileID: 11400000, guid: 80c444403bd9a044db5b3fbdced811ca, type: 2}
+  attack: {fileID: 11400000, guid: b47b57fb7991e7741af5600d8868e689, type: 2}
   move: {fileID: 11400000, guid: ca991e4202e0c0d4ba5ef1d77503b12c, type: 2}
   moveFirst: {fileID: 11400000, guid: c58f3a52047295c47a462cd51966d404, type: 2}

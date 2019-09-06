@@ -19,7 +19,7 @@ namespace BoardSystem
 
             foreach (var layer in layers)
             {
-                coords = coords.Concat(layer.GetCoordinations(self).Where(coordination => condition.Check(coordination))).ToArray();
+                coords = coords.Concat(layer.GetCoordinations(self).Where(coordination => condition.Check(self, coordination))).ToArray();
             }
 
 #if DEBUG_ALL || DEBUG_QUERY_LAYER
