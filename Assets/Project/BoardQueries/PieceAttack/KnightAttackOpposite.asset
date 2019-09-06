@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab850e22387069644b1ad5d844c3e962, type: 3}
   m_Name: KnightAttackOpposite
   m_EditorClassIdentifier: 
-  layer: {fileID: 11400000, guid: de7d8b5681f795443ac88cd37cedd50e, type: 2}
+  layer: {fileID: 11400000, guid: 00c4314148cec4c44a9d71db59388296, type: 2}
   conditions:
   - {fileID: 11400000, guid: da4ec84293fb91142b417482014f1069, type: 2}
