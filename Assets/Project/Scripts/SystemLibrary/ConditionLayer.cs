@@ -11,18 +11,15 @@ namespace BoardSystem
     public class ConditionLayer : BoardLayer
     {
         public BoardLayer layer;
-        public Condition[] conditions;
+        public Condition condition;
 
         public override BoardCoord[] GetCoordinations(Piece self)
         {
-            BoardCoord[] coords = new BoardCoord[] { };
+            BoardCoord[] coords = new BoardCoord[] { }; 
 
-            foreach (var condition in conditions)
-            {
-                coords = coords.Concat(layer.GetCoordinations(self)
-                                            .Where(coordination => condition.Check(self, coordination)))
-                               .ToArray();
-            }
+            coords = coords.Concat(layer.GetCoordinations(self)
+                           .Where(coordination => condition.Check(self, coordination)))
+                           .ToArray();
 
 #if DEBUG_ALL || DEBUG_QUERY_LAYER
             string DEBUG_STRING = $"Condition Layer \"{name}\"";

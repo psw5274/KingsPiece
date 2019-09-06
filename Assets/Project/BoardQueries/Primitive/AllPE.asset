@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b8eae5854e3e964f841b6deb9bdc8a7, type: 3}
-  m_Name: CardSkillManaInjection
+  m_Script: {fileID: 11500000, guid: ab850e22387069644b1ad5d844c3e962, type: 3}
+  m_Name: AllPE
   m_EditorClassIdentifier: 
-  label: Mana Injection
-  duration: 3
-  timing: 0
-  parameters:
-  - target: 2
-    value: 5
+  layer: {fileID: 11400000, guid: 7582b6575bce28a4c913b3024b360a4e, type: 2}
+  condition: {fileID: 11400000, guid: 654592d753c36c34b8f9be979a9e42eb, type: 2}

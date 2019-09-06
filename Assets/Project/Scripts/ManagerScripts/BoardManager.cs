@@ -48,6 +48,8 @@ public class BoardManager : MonoBehaviour
     private bool isPieceSelected = false;
     public bool isMagicReady = false;
     public MagicCard selectedMagicCard = null;
+    public Piece kingBlack = null;
+    public Piece kingWhite = null;
 
 
     private static BoardManager instance = null;
@@ -121,6 +123,9 @@ public class BoardManager : MonoBehaviour
             boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().Initialize(TeamColor.Black, heroCards[i + NUM_PIECE_PREFABS / 2]);
             boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().MovePosition(new BoardCoord(i, NUM_BOARD_COL - 1));
         }
+
+        kingBlack = boardStatus[3][7].GetComponent<Piece>();
+        kingWhite = boardStatus[3][0].GetComponent<Piece>();
 
         // code for when num of user's piece set are 18
         if (NUM_PIECE_PREFABS == 18)
@@ -202,7 +207,7 @@ public class BoardManager : MonoBehaviour
             }
         }
         // 이동
-        else if (isPieceSelected && selectedPieceScript.GetMovablePositions().Contains(selectedBoardCoord))
+        else if (isPieceSelected && selectedPieceScript.GetMovablePositions().Contains(selectedBoardCoord) && !GameManager.Instance.isMoved)
         {
             BoardManager.Instance.boardStatus[selectedPieceScript.GetPosition().col][selectedPieceScript.GetPosition().row] = null;
             BoardManager.Instance.boardStatus[selectedBoardCoord.col][selectedBoardCoord.row] = selectedPiece;
@@ -213,7 +218,7 @@ public class BoardManager : MonoBehaviour
             GameManager.Instance.isMoved = true;
         }
         // 공격
-        else if (isPieceSelected && selectedPieceScript.GetAttackablePositions().Contains(selectedBoardCoord))
+        else if (isPieceSelected && selectedPieceScript.GetAttackablePositions().Contains(selectedBoardCoord) && !GameManager.Instance.isMoved)
         {
             var targetPiece = GetPieceAt(selectedBoardCoord);
             targetPiece.DamageHP(selectedPieceScript.GetCurrentATK());
@@ -221,6 +226,7 @@ public class BoardManager : MonoBehaviour
 
             if ((targetPiece.GetStatus() & Piece.StatusFlag.Dead) == Piece.StatusFlag.Dead)
             {
+                BoardManager.Instance.boardStatus[selectedPieceScript.GetPosition().col][selectedPieceScript.GetPosition().row] = null;
                 boardStatus[targetPiece.GetPosition().col][targetPiece.GetPosition().row] = selectedPiece;
                 selectedPiece.transform.position = targetPiece.GetPosition().GetBoardCoardVector3();
                 selectedPieceScript.MovePosition(targetPiece.GetPosition());

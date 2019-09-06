@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: KingAttackOpposite
   m_EditorClassIdentifier: 
   layer: {fileID: 11400000, guid: d2a54bca421331f49a070d422b349782, type: 2}
-  conditions:
-  - {fileID: 11400000, guid: da4ec84293fb91142b417482014f1069, type: 2}
+  condition: {fileID: 11400000, guid: da4ec84293fb91142b417482014f1069, type: 2}

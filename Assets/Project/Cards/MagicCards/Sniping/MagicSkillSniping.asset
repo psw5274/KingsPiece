@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab850e22387069644b1ad5d844c3e962, type: 3}
-  m_Name: PawnBlackAttackOpposite
+  m_Script: {fileID: 11500000, guid: 4d427eafcfdf22a46896884213646e1a, type: 3}
+  m_Name: MagicSkillSniping
   m_EditorClassIdentifier: 
-  layer: {fileID: 11400000, guid: 80c444403bd9a044db5b3fbdced811ca, type: 2}
-  condition: {fileID: 11400000, guid: da4ec84293fb91142b417482014f1069, type: 2}
+  layer: {fileID: 11400000, guid: 61220645bead0364c98f10789da34d7c, type: 2}
+  damage: 5

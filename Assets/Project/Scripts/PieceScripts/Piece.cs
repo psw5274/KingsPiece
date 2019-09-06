@@ -29,6 +29,9 @@ namespace PieceSystem
         {
             team = teamColor;
             data = heroCard;
+
+            HPCurrent = heroCard.statHP;
+            ATKCurrent = heroCard.statATK;
         }
 
         public void UpdateStatus()
@@ -41,6 +44,7 @@ namespace PieceSystem
                 {
                     status |= StatusFlag.Dead;
                     gameObject.SetActive(false);
+                    BoardManager.Instance.boardStatus[position.col][position.row] = null;
                 }
             }
         }
@@ -76,6 +80,7 @@ namespace PieceSystem
         public void AddHP(int delta)
         {
             HPAdditional += delta;
+            HPAdditional = HPAdditional < 0 ? 0 : HPAdditional;
         }
         public void HealHP(int amount)
         {
@@ -85,7 +90,9 @@ namespace PieceSystem
         public void DamageHP(int amount)
         {
             amount = amount < 0 ? 0 : amount;
-            HPCurrent = Mathf.Clamp(HPCurrent - amount, 0, data.statHP + HPAdditional);
+            int remain = HPAdditional - amount < 0 ? amount - HPAdditional : 0;
+            HPAdditional = HPAdditional - amount + remain;
+            HPCurrent = Mathf.Clamp(HPCurrent - remain, 0, data.statHP + HPAdditional);
         }
         public int GetStockATK()
         {

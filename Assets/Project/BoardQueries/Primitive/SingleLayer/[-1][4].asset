@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b8eae5854e3e964f841b6deb9bdc8a7, type: 3}
-  m_Name: CardSkillSniping
+  m_Script: {fileID: 11500000, guid: c72a29b958b22a14b88d5c2aadc635b1, type: 3}
+  m_Name: '[-1][4]'
   m_EditorClassIdentifier: 
-  label: Sniping
-  duration: 0
-  timing: 0
-  parameters:
-  - target: 7
-    value: 5
+  coordination:
+    col: -1
+    row: 4
