@@ -19,17 +19,6 @@ namespace BoardSystem
                 }
             }
 
-#if DEBUG_ALL || DEBUG_QUERY_LAYER
-            string DEBUG_STRING = $"All Layer \"{name}\"";
-            DEBUG_STRING += $"\nQueried count [{coords.Count()}]";
-            DEBUG_STRING += $"\nQueried list below";
-            foreach (var elem in coords)
-            {
-                DEBUG_STRING += $"\n({elem.col}, {elem.row})";
-            }
-            Debug.Log(DEBUG_STRING);
-#endif
-
             return coords;
         }
     }
