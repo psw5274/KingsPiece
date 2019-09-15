@@ -17,14 +17,7 @@ namespace SkillSystem
         {
             List<BoardCoord> coords = new List<BoardCoord>();
 
-            if (GameManager.Instance.currentTurn == TeamColor.Black)
-            {
-                coords = layer.GetCoordinations(BoardManager.Instance.kingBlack).ToList();
-            }
-            else
-            {
-                coords = layer.GetCoordinations(BoardManager.Instance.kingWhite).ToList();
-            }
+            coords = layer.GetCoordinations(GetCurrentKing()).ToList();
 
 #if DEBUG_ALL || DEBUG_SKILL || DEBUG_SKILL_MAGIC
             string DEBUG_STRING = $"Magic Skill Sniping Target Query\"{name}\"";
@@ -44,8 +37,8 @@ namespace SkillSystem
         {
             foreach (var target in targets)
             {
-                BoardManager.Instance.GetPieceAt(target).AddHP(amount);
-                BoardManager.Instance.GetPieceAt(target).HealHP(amount);
+                GetPieceAt(target).AddHP(amount);
+                GetPieceAt(target).HealHP(amount);
             }
 
 #if DEBUG_ALL || DEBUG_SKILL || DEBUG_SKILL_MAGIC
@@ -55,7 +48,7 @@ namespace SkillSystem
             DEBUG_STRING += $"\nTarget list below";
             foreach (var ELEM in targets)
             {
-                DEBUG_STRING += $"\n{BoardManager.Instance.GetPieceAt(ELEM)} at ({ELEM.col}, {ELEM.row})";
+                DEBUG_STRING += $"\n{GetPieceAt(ELEM)} at ({ELEM.col}, {ELEM.row})";
             }
             Debug.Log(DEBUG_STRING);
 #endif
