@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1682315879c68ab4b90e8cd60dbe3a67, type: 3}
-  m_Name: MagicSkillIncrease Vitality
+  m_Script: {fileID: 11500000, guid: 00c60ace5cb875948b504f6ae4ea51bb, type: 3}
+  m_Name: MagicSkillFreezing
   m_EditorClassIdentifier: 
-  layer: {fileID: 11400000, guid: 2f96a78c28df08a40973e5e197ac26a7, type: 2}
-  amount: 5
+  layer: {fileID: 11400000, guid: 61220645bead0364c98f10789da34d7c, type: 2}

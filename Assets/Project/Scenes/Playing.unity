@@ -305,7 +305,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1a438392c9403ef41a3bf01c709f04e2, type: 2}
   - {fileID: 11400000, guid: 87e4df3e321e63d498ce8e63a87e3899, type: 2}
   - {fileID: 11400000, guid: 87e4df3e321e63d498ce8e63a87e3899, type: 2}
-  - {fileID: 11400000, guid: 000c1bcb6fdc32e4f9602bc2f6fb15b4, type: 2}
+  - {fileID: 11400000, guid: 27436c36caa559f48a39054ccd3d6c02, type: 2}
   blackCardDeck:
   - {fileID: 11400000, guid: 651ec3789780fca46a3850263b39b07b, type: 2}
   - {fileID: 11400000, guid: 651ec3789780fca46a3850263b39b07b, type: 2}
@@ -314,7 +314,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1a438392c9403ef41a3bf01c709f04e2, type: 2}
   - {fileID: 11400000, guid: 87e4df3e321e63d498ce8e63a87e3899, type: 2}
   - {fileID: 11400000, guid: 87e4df3e321e63d498ce8e63a87e3899, type: 2}
-  - {fileID: 11400000, guid: 000c1bcb6fdc32e4f9602bc2f6fb15b4, type: 2}
+  - {fileID: 11400000, guid: 27436c36caa559f48a39054ccd3d6c02, type: 2}
   whiteHands: []
   blackHands: []
   playerCardList: []

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: MagicCardManaInjection
   m_EditorClassIdentifier: 
   cardName: Mana Injection
-  cardDescription: Incease target ATK by 5 during 2 player's turns
+  cardDescription: Incease target ATK by 2.
   cardTemplateImage: {fileID: 21300000, guid: 6daac5d3e645e70439b9e08935881e33, type: 3}
   cardBackImage: {fileID: 21300000, guid: a27fb40f67f9a1242ac54e840096f2e3, type: 3}
   cardPortraitImage: {fileID: 21300000, guid: d65d71aca80c14d4aab7599b251a46f6, type: 3}
   cardGrade: 0
-  magicData: {fileID: 11400000, guid: 05a89c6a9cdb7e142beb73855a0aa19e, type: 2}
+  skillData: {fileID: 11400000, guid: b8341f222b9eb954389a03f6e79e3ed4, type: 2}

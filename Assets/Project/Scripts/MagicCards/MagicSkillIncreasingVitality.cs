@@ -1,37 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BoardSystem;
+﻿using System.Linq;
 #if DEBUG_ALL || DEBUG_SKILL || DEBUG_SKILL_MAGIC
 using UnityEngine;
 #endif
 
 namespace SkillSystem
 {
-    [CreateAssetMenu(fileName = "MagicSkillIncrease Vitality", menuName = "Magic Card/Increase Vitality", order = 5)]
+    [CreateAssetMenu(fileName = "MagicSkillIncreaseVitality", menuName = "Magic Card/Increase Vitality", order = 5)]
     public class MagicSkillIncreasingVitality : MagicSkill
     {
-        public BoardLayer layer;
         public int amount;
-
-        public override List<BoardCoord> GetTargetCoordinations()
-        {
-            List<BoardCoord> coords = new List<BoardCoord>();
-
-            coords = layer.GetCoordinations(GetCurrentKing()).ToList();
-
-#if DEBUG_ALL || DEBUG_SKILL || DEBUG_SKILL_MAGIC
-            string DEBUG_STRING = $"Magic Skill Sniping Target Query\"{name}\"";
-            DEBUG_STRING += $"\nQueried count [{coords.Count()}]";
-            DEBUG_STRING += $"\nQueried list below";
-            foreach (var ELEM in coords)
-            {
-                DEBUG_STRING += $"\n({ELEM.col}, {ELEM.row})";
-            }
-            Debug.Log(DEBUG_STRING);
-#endif
-
-            return coords;
-        }
 
         public override void Operate(BoardCoord[] targets)
         {
