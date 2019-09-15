@@ -162,6 +162,10 @@ namespace PieceSystem
         {
             status |= flag;
         }
+        public HeroCard GetHeroCard()
+        {
+            return data;
+        }
 
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PieceSystem;
+using SkillSystem;
 using UnityEngine;
 
 public enum TeamColor : int { White = 1, Black = -1 }
@@ -42,12 +43,12 @@ public class BoardManager : MonoBehaviour
 
     [SerializeField]
     private BoardCoord selectedBoardCoord;
-    [SerializeField]
-    private GameObject selectedPiece;
-    [SerializeField]
-    private bool isPieceSelected = false;
+    public GameObject selectedPiece;
+    public bool isPieceSelected = false;
     public bool isMagicReady = false;
+    public bool isPieceSkillReady = false;
     public MagicCard selectedMagicCard = null;
+    public HeroCard selectedHeroCard = null;
     public Piece kingBlack = null;
     public Piece kingWhite = null;
 
@@ -206,6 +207,17 @@ public class BoardManager : MonoBehaviour
                 CardManager.Instance.UseCard(selectedMagicCard);
             }
         }
+        else if (isPieceSkillReady && selectedHeroCard != null)
+        {
+            if (boardStatus[selectedBoardCoord.col][selectedBoardCoord.row] == null)
+            {
+                ResetBoardHighlighter();
+            }
+            else
+            {
+                selectedHeroCard.skills[0].Operate(selectedPieceScript, new BoardCoord[] { selectedBoardCoord });
+            }
+        }
         // 이동
         else if (isPieceSelected && selectedPieceScript.GetMovablePositions().Contains(selectedBoardCoord) && !GameManager.Instance.isMoved)
         {
@@ -240,6 +252,7 @@ public class BoardManager : MonoBehaviour
             if (!SelectPiece(selectedBoardCoord))
                 return;
             selectedPieceScript = selectedPiece.GetComponent<Piece>();
+            selectedHeroCard = selectedPieceScript.GetHeroCard();
 
             if (!GameManager.Instance.isMoved)
             {

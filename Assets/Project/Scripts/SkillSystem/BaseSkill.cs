@@ -1,4 +1,5 @@
-﻿using PieceSystem;
+﻿using System.Linq;
+using PieceSystem;
 using UnityEngine;
 
 namespace SkillSystem
@@ -19,6 +20,24 @@ namespace SkillSystem
             {
                 return BoardManager.Instance.kingWhite;
             }
+        }
+        public int GetDistanceBetween(Piece from, Piece to)
+        {
+            return BoardCoord.Distance(from.GetPosition(), to.GetPosition());
+        }
+        public BoardCoord GetDirection(Piece self, Piece target)
+        {
+            return (target.GetPosition() - self.GetPosition()).GetDirectionalCoord();
+        }
+
+        public int GetPieceATK(Piece piece)
+        {
+            return piece.GetCurrentATK();
+        }
+
+        public void DamageHP(Piece piece, int amount)
+        {
+            piece.DamageHP(amount);
         }
     }
 }
