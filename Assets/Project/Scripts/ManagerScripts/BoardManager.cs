@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PieceSystem;
 using SkillSystem;
@@ -69,6 +70,24 @@ public class BoardManager : MonoBehaviour
             return instance;
         }
     }
+
+    public void BroadcastTrigger(Effect.Trigger trigger)
+    {
+        for (int col = 0; col < NUM_BOARD_COL; ++col)
+        {
+            for (int row = 0; row < NUM_BOARD_ROW; ++row)
+            {
+                var piece = GetPieceAt(col, row);
+                if (piece == null)
+                {
+                    continue;
+                }
+
+                piece.TriggerEffect(trigger);
+            }
+        }
+    }
+
 
     public Piece GetPieceAt(BoardCoord position)
     {
@@ -219,7 +238,7 @@ public class BoardManager : MonoBehaviour
             }
         }
         // 이동
-        else if (isPieceSelected && selectedPieceScript.GetMovablePositions().Contains(selectedBoardCoord) && !GameManager.Instance.isMoved)
+        else if (isPieceSelected && selectedPieceScript.GetMovability() > 0 && selectedPieceScript.GetMovablePositions().Contains(selectedBoardCoord) && !GameManager.Instance.isMoved)
         {
             BoardManager.Instance.boardStatus[selectedPieceScript.GetPosition().col][selectedPieceScript.GetPosition().row] = null;
             BoardManager.Instance.boardStatus[selectedBoardCoord.col][selectedBoardCoord.row] = selectedPiece;
@@ -256,7 +275,10 @@ public class BoardManager : MonoBehaviour
 
             if (!GameManager.Instance.isMoved)
             {
-                HighlightBoard(selectedPieceScript.GetMovablePositions().ToList(), Action.Move);
+                if (selectedPieceScript.GetMovability() > 0)
+                {
+                    HighlightBoard(selectedPieceScript.GetMovablePositions().ToList(), Action.Move);
+                }
                 HighlightBoard(selectedPieceScript.GetAttackablePositions().ToList(), Action.Attack);
             }
             return;

@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
 
     public void NewTurn()
     {
+        BoardManager.Instance.BroadcastTrigger(SkillSystem.Effect.Trigger.TurnEnd);
         currentTurn = (currentTurn == TeamColor.Black) ? TeamColor.White : TeamColor.Black;
         BoardManager.Instance.ResetBoardHighlighter();
         BoardManager.Instance.ResetPiecesMovableCount();
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
         CardManager.Instance.ShowPlayerHands();
         isSkillUsed = false;
         isMoved = false;
+        BoardManager.Instance.BroadcastTrigger(SkillSystem.Effect.Trigger.TurnStart);
     }
 
     public void DrawCard()

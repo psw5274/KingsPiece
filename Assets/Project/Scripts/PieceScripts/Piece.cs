@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using SkillSystem;
 using UnityEngine;
 
 namespace PieceSystem
@@ -16,7 +19,7 @@ namespace PieceSystem
         private TeamColor team;
         private HeroCard data = null;
         private BoardCoord position = new BoardCoord(0, 0);
-        private BufDebuf[] bufDebufs = {};
+        private List<Effect> effects = new List<Effect>();
         private StatusFlag status = StatusFlag.Initial;
         private int HPCurrent = 0;
         private int HPAdditional = 0;
@@ -36,6 +39,21 @@ namespace PieceSystem
 
         public void UpdateStatus()
         {
+            List<Effect> removable = new List<Effect>();
+
+            foreach (var effect in effects)
+            {
+                if (effect.duration.value == 0)
+                {
+                    removable.Append(effect);
+                }
+            }
+
+            if (removable.Count != 0)
+            {
+                effects = effects.Except(removable).ToList();
+            }
+
             if (HPCurrent <= 0)
             {
                 // TODO(@Tetramad) HP zero callback call
@@ -106,14 +124,6 @@ namespace PieceSystem
         {
             ATKCurrent += delta;
         }
-        public int GetProtectability()
-        {
-            throw new System.NotImplementedException();
-        }
-        public void AddProtectability(int delta)
-        {
-            throw new System.NotImplementedException();
-        }
         public int GetMovability()
         {
             return movability;
@@ -142,17 +152,26 @@ namespace PieceSystem
         {
             position = destination;
         } 
-        public BufDebufTag[] GetEffectsWithTag(BufDebufTag tag)
+        public Effect[] GetEffectsWithTag(Effect.Tag tag)
         {
-            throw new System.NotImplementedException();
+            return effects.FindAll(sample => sample.tags.Contains(tag)).ToArray();
         }
-        public void AddEffect(BufDebuf effect)
+        public void AddEffect(Effect effect)
         {
-            throw new System.NotImplementedException();
+            effects.Add(effect);
+            effects.Last().OnSetUp(effects.Last(), this);
         }
-        public void RemoveEffect(BufDebuf effect)
+        public void RemoveEffect(Effect effect)
         {
-            throw new System.NotImplementedException();
+            var index = effects.FindIndex(sample => sample == effect);
+
+            if (index == -1)
+            {
+                return;
+            }
+
+            effects[index].OnTearDown(effects.Last(), this);
+            effects.RemoveAt(index);
         }
         public StatusFlag GetStatus()
         {
@@ -165,6 +184,16 @@ namespace PieceSystem
         public HeroCard GetHeroCard()
         {
             return data;
+        }
+
+        public void TriggerEffect(Effect.Trigger trigger)
+        {
+            var triggered = effects.FindAll(sample => sample.trigger == trigger);
+
+            foreach (var effect in triggered)
+            {
+                effect.OnTrigger(effects.Last(), this);
+            }
         }
 
         #endregion
