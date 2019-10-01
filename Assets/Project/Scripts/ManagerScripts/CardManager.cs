@@ -46,6 +46,7 @@ public class CardManager : MonoBehaviour {
     {
         List<BasicCardData> playerHands = GameManager.currentTurn == TeamColor.White ?
                                           whiteHands : blackHands;
+        Debug.Log("remove " + GameManager.currentTurn);
         playerHands.Remove(usedCard);
         ShowPlayerHands();
     }
@@ -69,7 +70,7 @@ public class CardManager : MonoBehaviour {
             playerCardList[i].GetComponent<MagicCardDisplay>().cardData = (MagicCard)hands[i];
 
             playerCardList[i].transform.position = handsZone.transform.position + 
-                                                   new Vector3((i - hands.Count/2) * 20, 0, 1);
+                                                   new Vector3(0, (i - hands.Count/2) * 20, 1);
             playerCardList[i].transform.RotateAround(handsZone.transform.position, new Vector3(0, 0, 1),
                                                      -(i - hands.Count / 2));
 

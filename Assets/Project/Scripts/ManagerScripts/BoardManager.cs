@@ -151,14 +151,29 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     private void OnMouseDown()
     {
+        if (GameManager.currentTurn != PlayerManager.playerTeam)
+            return;
+
         BoardCoord clickedCoord = GetClickedCoord();
         if (!clickedCoord.IsAvailable())
             return;
 
+        // 일단 다른 턴이면 손도 못대게 함. 수정 예정
+        //if (!GameManager.Instance.IsPlayerTurn())
+        //    return;
+        
+
+
         ResetBoardHighlighter();
         selectedBoardCoord = clickedCoord;
+
         Piece selectedPieceScript = isPieceSelected ? selectedPiece.GetComponent<Piece>() : null;
 
+        // 남의 피스 못건듦
+        if (selectedPieceScript != null && selectedPieceScript.teamColor != PlayerManager.playerTeam)
+            return;
+
+        // 스킬 카드 사용
         if (isMagicReady && selectedMagicCard != null)
         {
             if (boardStatus[selectedBoardCoord.col][selectedBoardCoord.row] == null)
@@ -172,20 +187,25 @@ public class BoardManager : MonoBehaviour
                 CardManager.Instance.UseCard(selectedMagicCard);
             }
         }
+
         // 이동
-        else if (isPieceSelected && selectedPieceScript.IsDetinationAvailable(selectedBoardCoord))
+        else if (isPieceSelected && 
+                selectedPieceScript.IsDetinationAvailable(selectedBoardCoord))
         {
             selectedPieceScript.Move(selectedBoardCoord);
             GameManager.Instance.isMoved = true;
         }
+
         // 공격
-        else if (isPieceSelected && selectedPieceScript.IsAttackAvailable(selectedBoardCoord))
+        else if (isPieceSelected && 
+                selectedPieceScript.IsAttackAvailable(selectedBoardCoord))
         { 
             selectedPieceScript.Attack(selectedBoardCoord);
             selectedPieceScript.UpdateStatus();
 
             GameManager.Instance.isMoved = true;
         }
+
         // 피스 선택
         else
         {

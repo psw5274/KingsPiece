@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -11,8 +10,6 @@ using UnityEngine;
 
 public enum PacketType : byte
 {
-    STX = 0x02,
-    ETX = 0x03,
     OPPONENT_SOCKET,
 
     TEAM_WHITE,
@@ -30,44 +27,53 @@ public enum PacketType : byte
     SKILL_UNBEATABLE,
 }
 
+
 public struct NetworkPacket
 {
+    // Packet's length. count self(packetLength variable)
+    public byte packetLength;
     public PacketType packetType;
-    public byte[] packetBytes;
+    public byte[] packetData;
+
+    public NetworkPacket(params byte[] data)
+    {
+        packetLength = data[0];
+        packetType = (PacketType)data[1];
+
+        packetData = new byte[packetLength - 2];
+
+        for (int i = 2; i < data.Length; i++)
+            packetData[i - 2] = data[i];
+    }
 
     public NetworkPacket(PacketType packetType, params byte[] data)
     {
         this.packetType = packetType;
-
-        packetBytes = new byte[2 + data.Length];
-
-        packetBytes[0] = (byte)packetType;
-
-        int i = 0;
-        for (; i < data.Length; i++)
-        {
-            packetBytes[i + 1] = data[i];
-        }
-
-        packetBytes[i+1] = (byte)PacketType.ETX;
+        this.packetData = (byte[])data.Clone();
+        this.packetLength = (byte)(data.Length + 2);
     }
 
     public byte[] GetBytes()
     {
-        return packetBytes;
+        byte[] retByte = new byte[this.packetLength];
+        retByte[0] = packetLength;
+        retByte[1] = (byte)packetType;
+        packetData.CopyTo(retByte, 2);
+
+        return retByte;
     }
 
     public override string ToString()
     {
-        return Encoding.UTF8.GetString(packetBytes);
+        return Encoding.ASCII.GetString(GetBytes());
     }
 
     public void Print()
     {
         string str = "";
-        for (int i = 0; i < packetBytes.Length; i++)
+        for (int i = 0; i < packetData.Length; i++)
         {
-            str += packetBytes[i].ToString();
+            str += packetData[i].ToString();
             str += " ";
         }
         Debug.Log(str);
@@ -93,8 +99,7 @@ public class StateObject
     public Socket workSocket = null;
     public const int BufferSize = 1024;
     public byte[] buffer = new byte[BufferSize];
-    public StringBuilder sb = new StringBuilder();
-    
-    public List<byte> packetBuilder = new List<byte>();
+
+    public Queue<byte> packetBuilder = new Queue<byte>();
     public Queue<NetworkPacket> packetQueue = new Queue<NetworkPacket>();
 }

@@ -53,13 +53,13 @@ public abstract class CardDisplay : MonoBehaviour, IBeginDragHandler, IDragHandl
     public void OnPointerEnter(PointerEventData eventData)
     {
         cardSiblingIndex = this.transform.GetSiblingIndex();
-        this.transform.position += new Vector3(0, 20, 0);
+        this.transform.position += new Vector3(-20, 0, 0);
         this.transform.SetAsLastSibling();
         selectedCard = this.gameObject;
     }
     public void OnPointerExit(PointerEventData eventData)
     {
-        this.transform.position -= new Vector3(0, 20, 0);
+        this.transform.position -= new Vector3(-20, 0, 0);
         this.transform.SetSiblingIndex(cardSiblingIndex);
     }
     public virtual void OnPointerUp(PointerEventData eventData)

@@ -24,6 +24,8 @@ public class MagicCardDisplay : CardDisplay
     /// <param name="eventData"></param>
     public override void OnPointerUp(PointerEventData eventData)
     {
+        if (!GameManager.Instance.IsPlayerTurn())
+            return;
         // 앞면 카드 아닐 때
         if (!isFront)
             return;

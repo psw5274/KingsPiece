@@ -39,11 +39,11 @@ public class CameraManager : MonoBehaviour {
         foreach(Transform child in BoardManager.Instance.pieceZone.transform)
         {
             child.eulerAngles = new Vector3(-child.eulerAngles.x,
-                                         child.eulerAngles.y,
-                                         child.eulerAngles.z);
+                                             child.eulerAngles.y,
+                                             child.eulerAngles.z);
             child.localScale = new Vector3(child.localScale.x,
                                            child.localScale.y,
-                                           -child.localScale.z);
+                                          -child.localScale.z);
         }
 	}
 

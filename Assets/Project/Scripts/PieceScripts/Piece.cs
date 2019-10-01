@@ -211,6 +211,12 @@ public abstract class Piece : MonoBehaviour
             if (!isMovedFirst)
                 isMovedFirst = true;
 
+            NetworkClient.PacketEnqueue(new NetworkPacket(PacketType.MOVE,
+                                        (byte)pieceCoord.col,
+                                        (byte)pieceCoord.row,
+                                        (byte)destCoord.col,
+                                        (byte)destCoord.row));
+
             EffectManager.Instance.NotifyMoved(this);
             return true;
         }

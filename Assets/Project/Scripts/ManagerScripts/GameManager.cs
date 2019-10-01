@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public GameObject chessBoard;
     public Text winningText;
+
+    [SerializeField]
     public static TeamColor currentTurn { get; private set; } = TeamColor.White;
 
     public bool isSkillUsed = false;
@@ -54,9 +56,8 @@ public class GameManager : MonoBehaviour
 
     private void NewTurn()
     {
-    // 카드 드로우, 버프 등의 함수 호출 해주자
-        
-    //CardManager.Instance.ShowPlayerHands();
+        // 카드 드로우, 버프 등의 함수 호출 해주자
+
         EffectManager.Instance.NotifyTurnPassed();
 
         isSkillUsed = false;
@@ -72,6 +73,11 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         SetPlayer();
+    }
+
+    public bool IsPlayerTurn()
+    {
+        return currentTurn == PlayerManager.playerTeam ? true : false;
     }
 }
 

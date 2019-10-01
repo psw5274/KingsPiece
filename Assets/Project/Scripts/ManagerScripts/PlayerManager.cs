@@ -29,10 +29,10 @@ public class PlayerManager : MonoBehaviour
         playerTeam = TeamColor.White;
     }
 
-
     public static void SetPlayerTeamColor(TeamColor teamColor)
     {
         playerTeam = teamColor;
+        Debug.Log("Player Color" + playerTeam);
     }
 
     /* No more use
