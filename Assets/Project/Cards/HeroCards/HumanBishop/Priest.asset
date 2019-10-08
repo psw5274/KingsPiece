@@ -25,4 +25,4 @@ MonoBehaviour:
   heroModelPrefab: {fileID: 1491861083214104, guid: a18b58f952f6d7246be7679db777f91a,
     type: 3}
   skills:
-  - {fileID: 11400000, guid: 00d30497f04985940b34090455e7c8d5, type: 2}
+  - {fileID: 11400000, guid: 1057ec2dde85f4c49a13db94a15e294d, type: 2}
