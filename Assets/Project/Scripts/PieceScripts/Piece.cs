@@ -21,6 +21,7 @@ namespace PieceSystem
         private BoardCoord position = new BoardCoord(0, 0);
         private List<Effect> effects = new List<Effect>();
         private StatusFlag status = StatusFlag.Initial;
+        private System.Action<Piece> dieTriggeredEffects;
         private int HPCurrent = 0;
         private int HPAdditional = 0;
         private int ATKCurrent = 0;
@@ -56,7 +57,7 @@ namespace PieceSystem
 
             if (HPCurrent <= 0)
             {
-                // TODO(@Tetramad) HP zero callback call
+                dieTriggeredEffects(this);
 
                 if (HPCurrent <= 0)
                 {
