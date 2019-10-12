@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab850e22387069644b1ad5d844c3e962, type: 3}
+  m_Name: LayerBladeStorm
+  m_EditorClassIdentifier: 
+  layer: {fileID: 11400000, guid: dceefe55035b6ae4ea26f6d2a259e3dd, type: 2}
+  condition: {fileID: 11400000, guid: da4ec84293fb91142b417482014f1069, type: 2}

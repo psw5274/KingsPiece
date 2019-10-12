@@ -53,15 +53,45 @@ public struct BoardCoord
 
     public static Vector3 GetBoardCoordVector3(int x, int z)
     {
-        return new Vector3((z - 3.5f) * BOARD_CELL_LENGTH,
+        return new Vector3((x - 3.5f) * BOARD_CELL_LENGTH,
                             7.21f,
-                            (x - 3.5f) * BOARD_CELL_LENGTH);
+                            (z - 3.5f) * BOARD_CELL_LENGTH);
     }
 
     public BoardCoord GetDirectionalCoord()
     {
         return new BoardCoord(col == 0 ? col : col / Mathf.Abs(col),
                               row == 0 ? row : row / Mathf.Abs(row));
+    }
+        public static int Distance(BoardCoord origin, BoardCoord target)
+    {
+        BoardCoord displacement = target - origin;
+        int squaredDistance = displacement.col * displacement.col + displacement.row * displacement.row;
+
+        int shift = 2;
+        int shiftedSquaredDinstance = squaredDistance >> shift;
+        while (shiftedSquaredDinstance != 0 && shiftedSquaredDinstance != squaredDistance)
+        {
+            ++shift;
+            ++shift;
+            shiftedSquaredDinstance = squaredDistance >> shift;
+        }
+        --shift;
+        --shift;
+
+        int distance = 0;
+        while (shift >= 0)
+        {
+            distance = distance << 1;
+            int candidateDistance = distance + 1;
+            if (candidateDistance * candidateDistance <= (squaredDistance >> shift))
+            {
+                distance = candidateDistance;
+            }
+            shift = shift - 2;
+        }
+
+        return distance;
     }
 
     /// <summary>

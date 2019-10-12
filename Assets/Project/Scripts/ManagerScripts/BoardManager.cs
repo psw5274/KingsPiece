@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using PieceSystem;
+using SkillSystem;
 using UnityEngine;
 
 public enum TeamColor : int { White = 1, Black = -1 }
@@ -41,12 +44,14 @@ public class BoardManager : MonoBehaviour
 
     [SerializeField]
     private BoardCoord selectedBoardCoord;
-    [SerializeField]
-    private GameObject selectedPiece;
-    [SerializeField]
-    private bool isPieceSelected = false;
+    public GameObject selectedPiece;
+    public bool isPieceSelected = false;
     public bool isMagicReady = false;
+    public bool isPieceSkillReady = false;
     public MagicCard selectedMagicCard = null;
+    public HeroCard selectedHeroCard = null;
+    public Piece kingBlack = null;
+    public Piece kingWhite = null;
 
 
     private static BoardManager instance = null;
@@ -66,6 +71,48 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    public void BroadcastTrigger(Effect.Trigger trigger)
+    {
+        for (int col = 0; col < NUM_BOARD_COL; ++col)
+        {
+            for (int row = 0; row < NUM_BOARD_ROW; ++row)
+            {
+                var piece = GetPieceAt(col, row);
+                if (piece == null)
+                {
+                    continue;
+                }
+
+                piece.TriggerEffect(trigger);
+            }
+        }
+    }
+
+
+    public Piece GetPieceAt(BoardCoord position)
+    {
+        if (position.IsAvailable() == false)
+        {
+            return null;
+        }
+
+        var coordination = boardStatus[position.col][position.row];
+
+        if (coordination == null)
+        {
+            return null;
+        }
+        else
+        {
+            return coordination.GetComponent<Piece>();
+        }
+    }
+
+    public Piece GetPieceAt(int col, int row)
+    {
+        return GetPieceAt(new BoardCoord(col, row));
+    }
+
     /// <summary>
     /// Initialize game board
     /// </summary>
@@ -82,19 +129,23 @@ public class BoardManager : MonoBehaviour
         {
             boardStatus[i][0] =
             Instantiate(heroCards[i].heroModelPrefab,
-                        BoardCoord.GetBoardCoordVector3(0, i),
+                        BoardCoord.GetBoardCoordVector3(i, 0),
                         heroCards[i].heroModelPrefab.transform.rotation,
                         pieceZone.transform);
-            boardStatus[i][0].GetComponent<Piece>().Initialize(TeamColor.White,heroCards[i]);
+            boardStatus[i][0].GetComponent<Piece>().Initialize(TeamColor.White, heroCards[i]);
+            boardStatus[i][0].GetComponent<Piece>().MovePosition(new BoardCoord(i, 0));
 
             boardStatus[i][NUM_BOARD_ROW - 1] =
             Instantiate(heroCards[i + NUM_PIECE_PREFABS / 2].heroModelPrefab,
-                        BoardCoord.GetBoardCoordVector3(NUM_BOARD_COL - 1, i),
+                        BoardCoord.GetBoardCoordVector3(i, NUM_BOARD_COL - 1),
                         heroCards[i + NUM_PIECE_PREFABS / 2].heroModelPrefab.transform.rotation,
                         pieceZone.transform);
-            boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().Initialize(TeamColor.Black,
-                                                                               heroCards[i+NUM_PIECE_PREFABS/2]);
+            boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().Initialize(TeamColor.Black, heroCards[i + NUM_PIECE_PREFABS / 2]);
+            boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().MovePosition(new BoardCoord(i, NUM_BOARD_COL - 1));
         }
+
+        kingBlack = boardStatus[3][7].GetComponent<Piece>();
+        kingWhite = boardStatus[3][0].GetComponent<Piece>();
 
         // code for when num of user's piece set are 18
         if (NUM_PIECE_PREFABS == 18)
@@ -103,18 +154,19 @@ public class BoardManager : MonoBehaviour
             {
                 boardStatus[i][1] =
                 Instantiate(heroCards[8].heroModelPrefab,
-                        BoardCoord.GetBoardCoordVector3(1, i),
+                        BoardCoord.GetBoardCoordVector3(i, 1),
                         heroCards[8].heroModelPrefab.transform.rotation,
                         pieceZone.transform);
-                boardStatus[i][1].GetComponent<Piece>().Initialize(TeamColor.White,heroCards[8]);
+                boardStatus[i][1].GetComponent<Piece>().Initialize(TeamColor.White, heroCards[8]);
+                boardStatus[i][1].GetComponent<Piece>().MovePosition(new BoardCoord(i, 1));
 
                 boardStatus[i][NUM_BOARD_ROW - 2] =
                 Instantiate(heroCards[8 + NUM_PIECE_PREFABS / 2].heroModelPrefab,
-                            BoardCoord.GetBoardCoordVector3(NUM_BOARD_COL - 2, i),
+                            BoardCoord.GetBoardCoordVector3(i, NUM_BOARD_COL - 2),
                             heroCards[8 + NUM_PIECE_PREFABS / 2].heroModelPrefab.transform.rotation,
                             pieceZone.transform);
-                boardStatus[i][NUM_BOARD_ROW - 2].GetComponent<Piece>().Initialize(TeamColor.Black,
-                                                                                    heroCards[8 + NUM_PIECE_PREFABS / 2]);
+                boardStatus[i][NUM_BOARD_ROW - 2].GetComponent<Piece>().Initialize(TeamColor.Black, heroCards[8 + NUM_PIECE_PREFABS / 2]);
+                boardStatus[i][NUM_BOARD_ROW - 2].GetComponent<Piece>().MovePosition(new BoardCoord(i, NUM_BOARD_COL - 2));
 
             }
         }
@@ -128,7 +180,7 @@ public class BoardManager : MonoBehaviour
     {
         selectedPiece = boardStatus[boardCoord.col][boardCoord.row];
         if (selectedPiece == null ||
-            selectedPiece.GetComponent<Piece>().teamColor != GameManager.Instance.currentTurn)
+            selectedPiece.GetComponent<Piece>().GetTeamColor() != GameManager.Instance.currentTurn)
         {
             isPieceSelected = false;
             return false;
@@ -153,6 +205,8 @@ public class BoardManager : MonoBehaviour
     {
         BoardCoord clickedCoord = GetClickedCoord();
         if (!clickedCoord.IsAvailable())
+
+
             return;
 
         ResetBoardHighlighter();
@@ -167,22 +221,47 @@ public class BoardManager : MonoBehaviour
             }
             else
             {
-                selectedMagicCard.magicData.Operate(selectedBoardCoord);
+                selectedMagicCard.skillData.Operate(new BoardCoord[] { selectedBoardCoord });
 
                 CardManager.Instance.UseCard(selectedMagicCard);
             }
         }
-        // 이동
-        else if (isPieceSelected && selectedPieceScript.IsDetinationAvailable(selectedBoardCoord))
+        else if (isPieceSkillReady && selectedHeroCard != null)
         {
-            selectedPieceScript.Move(selectedBoardCoord);
+            if (boardStatus[selectedBoardCoord.col][selectedBoardCoord.row] == null)
+            {
+                ResetBoardHighlighter();
+            }
+            else
+            {
+                selectedHeroCard.skills[0].Operate(selectedPieceScript, new BoardCoord[] { selectedBoardCoord });
+            }
+        }
+        // 이동
+        else if (isPieceSelected && selectedPieceScript.GetMovability() > 0 && selectedPieceScript.GetMovablePositions().Contains(selectedBoardCoord) && !GameManager.Instance.isMoved)
+        {
+            BoardManager.Instance.boardStatus[selectedPieceScript.GetPosition().col][selectedPieceScript.GetPosition().row] = null;
+            BoardManager.Instance.boardStatus[selectedBoardCoord.col][selectedBoardCoord.row] = selectedPiece;
+            selectedPiece.transform.position = selectedBoardCoord.GetBoardCoardVector3();
+            selectedPieceScript.MovePosition(selectedBoardCoord);
+
+            selectedPieceScript.SetStatus(Piece.StatusFlag.Moved);
             GameManager.Instance.isMoved = true;
         }
         // 공격
-        else if (isPieceSelected && selectedPieceScript.IsAttackAvailable(selectedBoardCoord))
-        { 
-            selectedPieceScript.Attack(selectedBoardCoord);
-            selectedPieceScript.UpdateStatus();
+        else if (isPieceSelected && selectedPieceScript.GetAttackablePositions().Contains(selectedBoardCoord) && !GameManager.Instance.isMoved)
+        {
+            var targetPiece = GetPieceAt(selectedBoardCoord);
+            targetPiece.DamageHP(selectedPieceScript.GetCurrentATK());
+            targetPiece.UpdateStatus();
+
+            if ((targetPiece.GetStatus() & Piece.StatusFlag.Dead) == Piece.StatusFlag.Dead)
+            {
+                BoardManager.Instance.boardStatus[selectedPieceScript.GetPosition().col][selectedPieceScript.GetPosition().row] = null;
+                boardStatus[targetPiece.GetPosition().col][targetPiece.GetPosition().row] = selectedPiece;
+                selectedPiece.transform.position = targetPiece.GetPosition().GetBoardCoardVector3();
+                selectedPieceScript.MovePosition(targetPiece.GetPosition());
+            }
 
             GameManager.Instance.isMoved = true;
         }
@@ -192,12 +271,15 @@ public class BoardManager : MonoBehaviour
             if (!SelectPiece(selectedBoardCoord))
                 return;
             selectedPieceScript = selectedPiece.GetComponent<Piece>();
+            selectedHeroCard = selectedPieceScript.GetHeroCard();
 
             if (!GameManager.Instance.isMoved)
             {
-                selectedPieceScript.GetAvailableDestination();
-                HighlightBoard(selectedPieceScript.moveDestinationList, Action.Move);
-                HighlightBoard(selectedPieceScript.attackTargetList, Action.Attack);
+                if (selectedPieceScript.GetMovability() > 0)
+                {
+                    HighlightBoard(selectedPieceScript.GetMovablePositions().ToList(), Action.Move);
+                }
+                HighlightBoard(selectedPieceScript.GetAttackablePositions().ToList(), Action.Attack);
             }
             return;
         }
@@ -238,7 +320,7 @@ public class BoardManager : MonoBehaviour
                     continue;
                 }
 
-                pieceObject.GetComponent<Piece>().movableCount = 1;
+                pieceObject.GetComponent<Piece>().SetMovability(1);
             }
         }
     }

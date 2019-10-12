@@ -35,7 +35,7 @@ public class MagicCardDisplay : CardDisplay
         }
 
         BoardManager.Instance.ResetBoardHighlighter();
-        BoardManager.Instance.HighlightBoard(cardData.magicData.GetAvailableTargetCoord(),Action.Attack);
+        BoardManager.Instance.HighlightBoard(cardData.skillData.GetTargetCoordinations(), Action.Attack);
         BoardManager.Instance.isMagicReady = true;
         BoardManager.Instance.selectedMagicCard = cardData;
     }

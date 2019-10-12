@@ -38,15 +38,15 @@ public class GameManager : MonoBehaviour
 
     public void NewTurn()
     {
+        BoardManager.Instance.BroadcastTrigger(SkillSystem.Effect.Trigger.TurnEnd);
         currentTurn = (currentTurn == TeamColor.Black) ? TeamColor.White : TeamColor.Black;
         BoardManager.Instance.ResetBoardHighlighter();
         BoardManager.Instance.ResetPiecesMovableCount();
         PlayerManager.Instance.ChangePlayerTeam();
-        //
         CardManager.Instance.ShowPlayerHands();
-        EffectManager.Instance.NotifyTurnPassed();
         isSkillUsed = false;
         isMoved = false;
+        BoardManager.Instance.BroadcastTrigger(SkillSystem.Effect.Trigger.TurnStart);
     }
 
     public void DrawCard()

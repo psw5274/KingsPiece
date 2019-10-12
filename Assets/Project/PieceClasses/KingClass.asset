@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea72b1a88231f547aaea1b8a48cc063, type: 3}
+  m_Name: KingClass
+  m_EditorClassIdentifier: 
+  attack: {fileID: 11400000, guid: 962d706ea7e6df44f96f0227f5364705, type: 2}
+  move: {fileID: 11400000, guid: ed57915877f64f0428b5fe956aa7939c, type: 2}

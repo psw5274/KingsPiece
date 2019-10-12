@@ -543,7 +543,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
-    1: CONSOLE_LOGGING
+    1: DEBUG_ALL;DEBUG_QUERY_LAYER;DEBUG_SKILL;DEBUG_SKILL_MAGIC
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}

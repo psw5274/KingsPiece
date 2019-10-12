@@ -1,251 +1,202 @@
 ﻿using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
+using SkillSystem;
 using UnityEngine;
 
-
-public enum MovingDirection { Straight, Diagonal, Both }
-public enum PieceStatus { Normal, Dead }
-
-public abstract class Piece : MonoBehaviour
+namespace PieceSystem
 {
-    protected BoardManager boardManager;
-    public BoardCoord pieceCoord;
-
-    public HeroCard cardData;
-    public TeamColor teamColor;
-
-    protected List<object> bufList = new List<object>();
-    public List<BoardCoord> moveDestinationList = new List<BoardCoord>();
-    public List<BoardCoord> attackTargetList = new List<BoardCoord>();
-
-    private int currentHP = 0;
-    private int additionalHP = 0;
-    public int CurrentHP
+    public class Piece : MonoBehaviour
     {
-        get
+        [Flags]
+        public enum StatusFlag
         {
-            return currentHP;
-        }
-        set
-        {
-            currentHP = value;
-            currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
-        }
-    }
-    private int MaxHP
-    {
-        get
-        {
-            return cardData.statHP + additionalHP;
-        }
-    }
-    public int AdditionHPDelta
-    {
-        set
-        {
-            additionalHP += value;
-            currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
-        }
-    }
-    public int MultiplicationHPDelta
-    {
-        set
-        {
-            int additionalValue = (int)(cardData.statHP * (value / 100.0f));
-            additionalHP += additionalValue;
-            currentHP = Mathf.Clamp(currentHP, 0, MaxHP);
-        }
-    }
-    private int additionalATK = 0;
-    public int CurrentATK
-    {
-        get
-        {
-            return cardData.statATK + additionalATK;
-        }
-    }
-    public int AdditionATKDelta
-    {
-        set
-        {
-            additionalATK += value;
-        }
-    }
-    public int MultiplicationATKDelta
-    {
-        set
-        {
-            additionalATK += (int)(cardData.statATK * (value / 100.0f));
-        }
-    }
-    public int movableCount = 1;
-    public int unbeatableCount = 0;
-    public PieceStatus pieceStatus = PieceStatus.Normal;
-
-    protected int dataAttackCount = 0;
-    protected int dataHitCount = 0;
-    protected int dataKillCount = 0;
-    protected int dataMoveCount = 0;
-
-    protected bool isMovedFirst = false;
-
-    protected bool isUseSkill = false;
-
-    protected MovingDirection movingDirection = MovingDirection.Both;
-    protected int movingDistance = 7;
-    
-    public virtual void Initialize(TeamColor teamColor, HeroCard heroCard)
-    {
-        this.teamColor = teamColor;
-        this.cardData = heroCard;
-        cardData = (HeroCard)ScriptableObject.CreateInstance(typeof(HeroCard));
-
-        currentHP = heroCard.statHP;
-    }
-
-    public virtual bool IsDestination()
-    {
-        return moveDestinationList.Count == 0 ? false : true;
-    }
-    public virtual bool IsDetinationAvailable(BoardCoord destCoord)
-    {
-        return destCoord.IsAvailable() && moveDestinationList.Exists(x => x == destCoord);
-    }
-    public virtual bool IsAttackAvailable(BoardCoord attackCoord)
-    {
-        return attackCoord.IsAvailable() && attackTargetList.Exists(x => x == attackCoord);
-    }
-
-    
-    // Todo : GetAvailableAttackTaget()과 분리
-    public virtual void GetAvailableDestination()
-    {
-        moveDestinationList.Clear();
-        attackTargetList.Clear();
-        ResetBoardCoord();
-
-        if (movableCount == 0)
-        {
-            return;
+            Initial = 0,
+            Dead = 1 << 0,
+            Moved = 1 << 1
         }
 
-        List<BoardCoord> tmpList = new List<BoardCoord>();
+        private TeamColor team;
+        private HeroCard data = null;
+        private BoardCoord position = new BoardCoord(0, 0);
+        private List<Effect> effects = new List<Effect>();
+        private StatusFlag status = StatusFlag.Initial;
+        private System.Action<Piece> dieTriggeredEffects;
+        private int HPCurrent = 0;
+        private int HPAdditional = 0;
+        private int ATKCurrent = 0;
+        private int movability = 0;
+        private int unbeatability = 0;
+        private int skillAvailability = 0;
 
-        if (movingDirection == MovingDirection.Straight ||
-            movingDirection == MovingDirection.Both)
-            tmpList.AddRange(new BoardCoord[] { BoardCoord.RIGHT, BoardCoord.LEFT,
-                                                BoardCoord.DOWN, BoardCoord.UP });
-
-        if (movingDirection == MovingDirection.Diagonal ||
-            movingDirection == MovingDirection.Both)
-            tmpList.AddRange(new BoardCoord[] { BoardCoord.UP_RIGHT, BoardCoord.DOWN_RIGHT,
-                                                BoardCoord.DOWN_LEFT, BoardCoord.UP_LEFT });
-
-        foreach (BoardCoord coord in tmpList)
+        public void Initialize(TeamColor teamColor, HeroCard heroCard)
         {
-            for (int i = 1; i <= movingDistance; i++)
+            team = teamColor;
+            data = heroCard;
+
+            HPCurrent = heroCard.statHP;
+            ATKCurrent = heroCard.statATK;
+        }
+
+        public void UpdateStatus()
+        {
+            List<Effect> removable = new List<Effect>();
+
+            foreach (var effect in effects)
             {
-                BoardCoord tmpCoord = pieceCoord + (coord * i);
-                if (tmpCoord.IsAvailable())
+                if (effect.duration.value == 0)
                 {
-                    GameObject targetCoordObject = boardManager.boardStatus[tmpCoord.col][tmpCoord.row];
-
-                    if (targetCoordObject != null)
-                    {
-                        if (targetCoordObject.GetComponent<Piece>().teamColor != this.teamColor)
-                            attackTargetList.Add(tmpCoord);
-                        break;
-                    }
-                    else
-                        moveDestinationList.Add(tmpCoord);
+                    removable.Append(effect);
                 }
-                else
-                    break;
+            }
+
+            if (removable.Count != 0)
+            {
+                effects = effects.Except(removable).ToList();
+            }
+
+            if (HPCurrent <= 0)
+            {
+                dieTriggeredEffects(this);
+
+                if (HPCurrent <= 0)
+                {
+                    status |= StatusFlag.Dead;
+                    gameObject.SetActive(false);
+                    BoardManager.Instance.boardStatus[position.col][position.row] = null;
+                }
             }
         }
-    }
 
-    public virtual bool Attack(BoardCoord targetCoord)
-    {
-        if (!attackTargetList.Exists(x => x == targetCoord))
+        public BoardCoord[] GetMovablePositions()
         {
-            return false;
-        }
-        Piece target = boardManager.boardStatus[targetCoord.col][targetCoord.row].GetComponent<Piece>();
-        target.CurrentHP -= this.CurrentATK;
-        target.UpdateStatus();
-
-        if (target.pieceStatus == PieceStatus.Dead)
-        {
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
-            this.pieceCoord = targetCoord;
-            this.transform.position = pieceCoord.GetBoardCoardVector3();
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
-        }
-        else // not dead
-        {
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
-            this.pieceCoord = targetCoord - (targetCoord - this.pieceCoord).GetDirectionalCoord();
-            this.transform.position = pieceCoord.GetBoardCoardVector3();
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
+            return data.heroClass.GetMovablePositions(this);
         }
 
-        EffectManager.Instance.NotifyAttacking(this);
-        EffectManager.Instance.NotifyDamaged(target);
-        return true;
-    }
-
-    public virtual bool Move(BoardCoord destCoord)
-    {
-        if (moveDestinationList.Exists(x => x == destCoord))
+        public BoardCoord[] GetAttackablePositions()
         {
-            // 성공
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
-
-            pieceCoord = destCoord;
-            this.transform.position = pieceCoord.GetBoardCoardVector3();
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
-
-
-            if (!isMovedFirst)
-                isMovedFirst = true;
-
-            EffectManager.Instance.NotifyMoved(this);
-            return true;
+            return data.heroClass.GetAttackablePositions(this);
         }
-        else
+
+        #region Modify Functions
+
+        public TeamColor GetTeamColor()
         {
-            return false;
+            return team;
         }
-    }
-    public abstract bool UseSkill();
-
-    public void UpdateStatus()
-    {
-        if (CurrentHP <= 0)
+        public int GetStockHP()
         {
-            this.pieceStatus = PieceStatus.Dead;
-            this.Die();
+            return data.statHP;
         }
+        public int GetCurrentHP()
+        {
+            return HPCurrent;
+        }
+        public int GetMaxHP()
+        {
+            return data.statHP + HPAdditional;
+        }
+        public void AddHP(int delta)
+        {
+            HPAdditional += delta;
+            HPAdditional = HPAdditional < 0 ? 0 : HPAdditional;
+        }
+        public void HealHP(int amount)
+        {
+            amount = amount < 0 ? 0 : amount;
+            HPCurrent = Mathf.Clamp(HPCurrent + amount, 0, data.statHP + HPAdditional);
+        }
+        public void DamageHP(int amount)
+        {
+            amount = amount < 0 ? 0 : amount;
+            int remain = HPAdditional - amount < 0 ? amount - HPAdditional : 0;
+            HPAdditional = HPAdditional - amount + remain;
+            HPCurrent = Mathf.Clamp(HPCurrent - remain, 0, data.statHP + HPAdditional);
+        }
+        public int GetStockATK()
+        {
+            return data.statATK;
+        }
+        public int GetCurrentATK()
+        {
+            return ATKCurrent;
+        }
+        public void AddATK(int delta)
+        {
+            ATKCurrent += delta;
+        }
+        public int GetMovability()
+        {
+            return movability;
+        }
+        public void SetMovability(int value)
+        {
+            movability = value;
+        }
+        public void AddMovability(int delta)
+        {
+            movability += delta;
+        }
+        public int GetSkillUsability()
+        {
+            return skillAvailability;
+        }
+        public void AddSkillUsability(int amount)
+        {
+            skillAvailability += amount;
+        }
+        public BoardCoord GetPosition()
+        {
+            return position;
+        }
+        public void MovePosition(BoardCoord destination)
+        {
+            position = destination;
+        } 
+        public Effect[] GetEffectsWithTag(Effect.Tag tag)
+        {
+            return effects.FindAll(sample => sample.tags.Contains(tag)).ToArray();
+        }
+        public void AddEffect(Effect effect)
+        {
+            effects.Add(effect);
+            effects.Last().OnSetUp(effects.Last(), this);
+        }
+        public void RemoveEffect(Effect effect)
+        {
+            var index = effects.FindIndex(sample => sample == effect);
+
+            if (index == -1)
+            {
+                return;
+            }
+
+            effects[index].OnTearDown(effects.Last(), this);
+            effects.RemoveAt(index);
+        }
+        public StatusFlag GetStatus()
+        {
+            return status;
+        }
+        public void SetStatus(StatusFlag flag)
+        {
+            status |= flag;
+        }
+        public HeroCard GetHeroCard()
+        {
+            return data;
+        }
+
+        public void TriggerEffect(Effect.Trigger trigger)
+        {
+            var triggered = effects.FindAll(sample => sample.trigger == trigger);
+
+            foreach (var effect in triggered)
+            {
+                effect.OnTrigger(effects.Last(), this);
+            }
+        }
+
+        #endregion
     }
-
-    protected virtual void Die()
-    {
-        BoardManager.Instance.boardStatus[pieceCoord.col][pieceCoord.row] = null;
-        this.gameObject.SetActive(false);
-    }
-
-    public void ResetBoardCoord()
-    {
-        pieceCoord = new BoardCoord(transform.position.x, transform.position.z);
-    }
-
-    private void Start()
-    {
-        this.boardManager = BoardManager.Instance;
-
-        pieceCoord = new BoardCoord(transform.position.x, transform.position.z);
-    }
-
 }
