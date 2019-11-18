@@ -32,7 +32,7 @@ public class BoardManager : MonoBehaviour
     public GameObject moveHighlightFilter;
     public GameObject attackHighlightFilter;
     public GameObject pieceZone;
-
+    
     /// <summary>
     /// Chess Board Status with pieces
     /// </summary>
@@ -47,7 +47,7 @@ public class BoardManager : MonoBehaviour
     private bool isPieceSelected = false;
     public bool isMagicReady = false;
     public MagicCard selectedMagicCard = null;
-
+    
 
     private static BoardManager instance = null;
     public static BoardManager Instance
