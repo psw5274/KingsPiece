@@ -2,27 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : Manager<PlayerManager>
 {
     public TeamColor playerTeam;
-
-    private static PlayerManager instance = null;
-    public static PlayerManager Instance
-    {
-        get
-        {
-            if (!instance)
-            {
-                instance = FindObjectOfType(typeof(PlayerManager)) as PlayerManager;
-                if (!instance)
-                {
-                    Debug.Log("ERROR : NO PlayerManager");
-                }
-            }
-            return instance;
-        }
-    }
-
+    
     public void Start()
     {
         playerTeam = TeamColor.White;
@@ -32,5 +15,10 @@ public class PlayerManager : MonoBehaviour
     {
         playerTeam = (playerTeam == TeamColor.White) ? TeamColor.Black : TeamColor.White;
         CameraManager.Instance.RotateCamera();
+    }
+    public void SetPlayerTeamColor(TeamColor teamColor)
+    {
+        playerTeam = teamColor;
+        Debug.Log("Player Color" + playerTeam);
     }
 }

@@ -57,7 +57,6 @@ public struct NetworkPacket
         retByte[0] = packetLength;
         retByte[1] = (byte)packetType;
         packetData.CopyTo(retByte, 2);
-
         return retByte;
     }
 
@@ -71,7 +70,7 @@ public struct NetworkPacket
 public static class Net
 {
     public static string serverIP = "127.0.0.1";
-    public static int serverPort = 9876;
+    public static int serverPort = 1234;
 
     static IPHostEntry ipHostInfo = Dns.GetHostEntry(serverIP);
     static IPAddress ipAddress = ipHostInfo.AddressList[0];

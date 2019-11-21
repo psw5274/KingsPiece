@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingletonPattern<T> : MonoBehaviour where T : MonoBehaviour
+public class Manager<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static bool _ShuttingDown = false;
     private static object _Lock = new object();

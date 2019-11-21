@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 
+/*
 [CustomEditor(typeof(BasicCardData))]
 public class CardEditor : Editor {
     public override void OnInspectorGUI()
@@ -15,3 +16,4 @@ public class CardEditor : Editor {
             EditorUtility.SetDirty(target);
     }
 }
+*/
