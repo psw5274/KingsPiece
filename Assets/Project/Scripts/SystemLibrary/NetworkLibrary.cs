@@ -23,6 +23,7 @@ public enum PacketType : byte
     SKILL_HP_MULTIPLICATION,
     SKILL_IMMOVABLE,
     SKILL_UNBEATABLE,
+    TURN_END,
 }
 
 
@@ -51,6 +52,27 @@ public struct NetworkPacket
         this.packetLength = (byte)(data.Length + 2);
     }
 
+    /// <summary>
+    /// NetworkPacket Constructor with PacketType.Move
+    /// </summary>
+    /// <param name="packetType"></param>
+    /// <param name="originX"></param>
+    /// <param name="originY"></param>
+    /// <param name="destX"></param>
+    /// <param name="destY"></param>
+    public NetworkPacket(PacketType packetType, int originX, int originY, int destX, int destY)
+    {
+        this.packetType = PacketType.MOVE;
+        this.packetData = new byte[4];
+
+        packetData[0] = (byte)originX;
+        packetData[1] = (byte)originY;
+        packetData[2] = (byte)destX;
+        packetData[3] = (byte)destY;
+
+        this.packetLength = (byte)(packetData.Length + 2);
+    }
+
     public byte[] GetBytes()
     {
         byte[] retByte = new byte[this.packetLength];
@@ -73,7 +95,8 @@ public static class Net
     public static int serverPort = 1234;
 
     static IPHostEntry ipHostInfo = Dns.GetHostEntry(serverIP);
-    static IPAddress ipAddress = ipHostInfo.AddressList[0];
+    //static IPAddress ipAddress = ipHostInfo.AddressList[0];
+    static IPAddress ipAddress = IPAddress.Parse(serverIP);
 
     public static IPEndPoint IEP = new IPEndPoint(ipAddress, serverPort);
 }

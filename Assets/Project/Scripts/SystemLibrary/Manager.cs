@@ -31,6 +31,6 @@ public class Manager<T> : MonoBehaviour where T : MonoBehaviour
                 }
                 return _Instance;
             }
-        }   
+        }
     }
 }

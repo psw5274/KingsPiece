@@ -52,7 +52,7 @@ public class CardManager : MonoBehaviour {
 
     public void ShowPlayerHands()
     {
-        List<BasicCardData> hands = PlayerManager.Instance.playerTeam == TeamColor.White ?
+        List<BasicCardData> hands = PlayerManager.Instance.GetPlayerTeamColor() == TeamColor.White ?
                                           whiteHands : blackHands;
 
         //  최적화 필수
@@ -77,7 +77,7 @@ public class CardManager : MonoBehaviour {
         }
 
         // opposite player's hand's back
-        List<BasicCardData> oppositeHands = PlayerManager.Instance.playerTeam == TeamColor.White ?
+        List<BasicCardData> oppositeHands = PlayerManager.Instance.GetPlayerTeamColor() == TeamColor.White ?
                                             blackHands : whiteHands;
 
         foreach (GameObject card in oppositeCardList)
@@ -95,7 +95,7 @@ public class CardManager : MonoBehaviour {
             oppositeCardList[i].GetComponent<MagicCardDisplay>().cardData = (MagicCard)oppositeHands[i];
 
             oppositeCardList[i].transform.position = oppositeHandsZone.transform.position +
-                                                    new Vector3((i - oppositeHands.Count / 2) * 20, 0, 1);
+                                                    new Vector3(-(i - oppositeHands.Count / 2) * 20, 0, 1);
             oppositeCardList[i].transform.RotateAround(oppositeHandsZone.transform.position, 
                                                        new Vector3(0, 0, 1),
                                                        -(i - oppositeHands.Count / 2));

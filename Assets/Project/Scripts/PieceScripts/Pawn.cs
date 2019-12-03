@@ -4,7 +4,6 @@ using UnityEngine;
 
 class Pawn : Piece
 {
-
     public override void GetAvailableDestination()
     {
         moveDestinationList.Clear();
@@ -18,7 +17,10 @@ class Pawn : Piece
 
         BoardCoord tmpCoord;
 
-        tmpCoord = pieceCoord + new BoardCoord(0, 1) * (int)teamColor;
+        // 폰은 직진이라 방향 잡아줘야함
+        int direction = (int)teamColor * (int)PlayerManager.Instance.GetPlayerTeamColor();
+
+        tmpCoord = pieceCoord + new BoardCoord(0, 1) * direction;
         GameObject targetCoordObject = boardManager.boardStatus[tmpCoord.col][tmpCoord.row];
         if (tmpCoord.IsAvailable() && targetCoordObject == null)
         {
@@ -26,7 +28,7 @@ class Pawn : Piece
 
             if (!isMovedFirst)
             {
-                tmpCoord = pieceCoord + new BoardCoord(0, 2) * (int)teamColor;
+                tmpCoord = pieceCoord + new BoardCoord(0, 2) * direction;
                 targetCoordObject = boardManager.boardStatus[tmpCoord.col][tmpCoord.row];
 
                 if (targetCoordObject == null)
@@ -34,7 +36,7 @@ class Pawn : Piece
             }
         }
 
-        tmpCoord = pieceCoord + new BoardCoord(1, 1) * (int)teamColor;
+        tmpCoord = pieceCoord + new BoardCoord(1, 1) * direction;
         if (tmpCoord.IsAvailable())
         {
             targetCoordObject = boardManager.boardStatus[tmpCoord.col][tmpCoord.row];

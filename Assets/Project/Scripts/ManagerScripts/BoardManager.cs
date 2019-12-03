@@ -17,7 +17,7 @@ enum BoardEdge { Top = 36, Bottom = -36, LEFT = -36, RIGHT = 36 }
 public enum Action { Move, Attack }
 
 
-public class BoardManager : MonoBehaviour
+public class BoardManager : Manager<BoardManager>
 {
     public const int NUM_BOARD_ROW = 8;
     public const int NUM_BOARD_COL = 8;
@@ -48,35 +48,38 @@ public class BoardManager : MonoBehaviour
     public bool isMagicReady = false;
     public MagicCard selectedMagicCard = null;
     
-
-    private static BoardManager instance = null;
-    public static BoardManager Instance
-    {
-        get
-        {
-            if (!instance)
-            {
-                instance = FindObjectOfType(typeof(BoardManager)) as BoardManager;
-                if (!instance)
-                {
-                    Debug.Log("ERROR : NO BoardManager");
-                }
-            }
-            return instance;
-        }
-    }
-
     /// <summary>
     /// Initialize game board
     /// </summary>
     /// <returns></returns>
     public bool InitBoard()
     {
+        // need refactoring
+
+        TeamColor playerTeamColor = PlayerManager.Instance.GetPlayerTeamColor();
+        TeamColor opponentTeamColor = playerTeamColor == TeamColor.White ? TeamColor.Black : TeamColor.White;
+
+        // set card list from player team color
+        if (playerTeamColor == TeamColor.Black)
+        {
+            int length = heroCards.Length; //18
+
+            var tmp = heroCards[length-1];
+            heroCards[length-1] = heroCards[length/2 - 1];
+            heroCards[length / 2 - 1] = tmp;
+            
+            for(int i = 0; i < length / 2 - 1; i++)
+            {
+                tmp = heroCards[i];
+                heroCards[i] = heroCards[length - i - 2];
+                heroCards[length - i - 2] = tmp;
+            }
+        }
+
 
         boardStatus = new GameObject[NUM_BOARD_ROW][];
         for (int i = 0; i < NUM_BOARD_ROW; i++)
             boardStatus[i] = new GameObject[NUM_BOARD_COL];
-
 
         for (int i = 0; i < 8; i++)
         {
@@ -85,35 +88,36 @@ public class BoardManager : MonoBehaviour
                         BoardCoord.GetBoardCoordVector3(0, i),
                         heroCards[i].heroModelPrefab.transform.rotation,
                         pieceZone.transform);
-            boardStatus[i][0].GetComponent<Piece>().Initialize(TeamColor.White,heroCards[i]);
+            boardStatus[i][0].GetComponent<Piece>().Initialize(playerTeamColor, heroCards[i]);
 
             boardStatus[i][NUM_BOARD_ROW - 1] =
             Instantiate(heroCards[i + NUM_PIECE_PREFABS / 2].heroModelPrefab,
                         BoardCoord.GetBoardCoordVector3(NUM_BOARD_COL - 1, i),
                         heroCards[i + NUM_PIECE_PREFABS / 2].heroModelPrefab.transform.rotation,
                         pieceZone.transform);
-            boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().Initialize(TeamColor.Black,
+            boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().Initialize(opponentTeamColor,
                                                                                heroCards[i+NUM_PIECE_PREFABS/2]);
         }
 
         // code for when num of user's piece set are 18
         if (NUM_PIECE_PREFABS == 18)
         {
-            for (int i = 0; i < NUM_PIECE_PREFABS / 2 - 1; i++)    // instantiate pawn
+            // instantiate pawn
+            for (int i = 0; i < NUM_PIECE_PREFABS / 2 - 1; i++)    
             {
                 boardStatus[i][1] =
                 Instantiate(heroCards[8].heroModelPrefab,
-                        BoardCoord.GetBoardCoordVector3(1, i),
-                        heroCards[8].heroModelPrefab.transform.rotation,
-                        pieceZone.transform);
-                boardStatus[i][1].GetComponent<Piece>().Initialize(TeamColor.White,heroCards[8]);
+                            BoardCoord.GetBoardCoordVector3(1, i),
+                            heroCards[8].heroModelPrefab.transform.rotation,
+                            pieceZone.transform);
+                boardStatus[i][1].GetComponent<Piece>().Initialize(playerTeamColor, heroCards[8]);
 
                 boardStatus[i][NUM_BOARD_ROW - 2] =
                 Instantiate(heroCards[8 + NUM_PIECE_PREFABS / 2].heroModelPrefab,
                             BoardCoord.GetBoardCoordVector3(NUM_BOARD_COL - 2, i),
                             heroCards[8 + NUM_PIECE_PREFABS / 2].heroModelPrefab.transform.rotation,
                             pieceZone.transform);
-                boardStatus[i][NUM_BOARD_ROW - 2].GetComponent<Piece>().Initialize(TeamColor.Black,
+                boardStatus[i][NUM_BOARD_ROW - 2].GetComponent<Piece>().Initialize(opponentTeamColor,
                                                                                     heroCards[8 + NUM_PIECE_PREFABS / 2]);
 
             }
@@ -126,14 +130,16 @@ public class BoardManager : MonoBehaviour
 
     private bool SelectPiece(BoardCoord boardCoord)
     {
-        selectedPiece = boardStatus[boardCoord.col][boardCoord.row];
-        if (selectedPiece == null ||
-            selectedPiece.GetComponent<Piece>().teamColor != GameManager.Instance.currentTurn)
+        GameObject tmpPiece = boardStatus[boardCoord.col][boardCoord.row];
+
+        if (tmpPiece == null ||
+            tmpPiece.GetComponent<Piece>().teamColor != PlayerManager.Instance.GetPlayerTeamColor())
         {
             isPieceSelected = false;
             return false;
         }
 
+        selectedPiece = tmpPiece;
         isPieceSelected = true;
         return true;
     }
@@ -155,10 +161,15 @@ public class BoardManager : MonoBehaviour
         if (!clickedCoord.IsAvailable())
             return;
 
+        // check player's turn
+        if (PlayerManager.Instance.GetPlayerTeamColor() != GameManager.Instance.currentTurn)
+            return;
+
         ResetBoardHighlighter();
         selectedBoardCoord = clickedCoord;
         Piece selectedPieceScript = isPieceSelected ? selectedPiece.GetComponent<Piece>() : null;
 
+        // 스킬 사용
         if (isMagicReady && selectedMagicCard != null)
         {
             if (boardStatus[selectedBoardCoord.col][selectedBoardCoord.row] == null)
@@ -191,6 +202,7 @@ public class BoardManager : MonoBehaviour
         {
             if (!SelectPiece(selectedBoardCoord))
                 return;
+
             selectedPieceScript = selectedPiece.GetComponent<Piece>();
 
             if (!GameManager.Instance.isMoved)
@@ -273,9 +285,14 @@ public class BoardManager : MonoBehaviour
         return clickedCoord;
     }
 
+
+    public Piece GetPieceFromBoardCoord(BoardCoord coord)
+    {
+        return boardStatus[coord.col][coord.row].GetComponent<Piece>();
+    }
+
     private void Awake()
     {
         InitBoard();
     }
-
 }

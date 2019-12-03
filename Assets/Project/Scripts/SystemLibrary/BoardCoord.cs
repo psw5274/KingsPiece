@@ -64,6 +64,21 @@ public struct BoardCoord
                               row == 0 ? row : row / Mathf.Abs(row));
     }
 
+    public void ReverseBoardCoord()
+    {
+        this.col = BoardManager.NUM_BOARD_COL - col - 1;
+        this.row = BoardManager.NUM_BOARD_ROW - row - 1;
+    }
+
+    public static BoardCoord GetReverseBoardCoord(int col, int row)
+    {
+        col = BoardManager.NUM_BOARD_COL - col - 1;
+        row = BoardManager.NUM_BOARD_ROW - row - 1;
+
+        return new BoardCoord(col, row);
+    }
+
+
     /// <summary>
     /// 보드 좌표에 대한 연산자 오버로딩
     /// </summary>

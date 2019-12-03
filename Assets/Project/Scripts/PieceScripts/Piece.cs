@@ -196,28 +196,30 @@ public abstract class Piece : MonoBehaviour
         return true;
     }
 
-    public virtual bool Move(BoardCoord destCoord)
+    /// <summary>
+    /// Move Piece
+    /// </summary>
+    /// <param name="destCoord"></param>
+    /// <param name="isNetworkCommand">Oppoent Network Move flag for Network reflection</param>
+    /// <returns></returns>
+    public bool Move(BoardCoord destCoord)
     {
-        if (moveDestinationList.Exists(x => x == destCoord))
-        {
-            // 성공
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
+        EffectManager.Instance.NotifyMoved(this);
 
-            pieceCoord = destCoord;
-            this.transform.position = pieceCoord.GetBoardCoardVector3();
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
+        NetworkManager.Instance.SendingPacketEnqueue(new NetworkPacket(PacketType.MOVE,
+                        pieceCoord.col, pieceCoord.row, destCoord.col, destCoord.row));
+        Debug.Log("Move (" + pieceCoord.col + "," + pieceCoord.row +
+                    ") to " + destCoord.col + "," + destCoord.row);
 
+        boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
+        pieceCoord = destCoord;
+        this.transform.position = pieceCoord.GetBoardCoardVector3();
+        boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
 
-            if (!isMovedFirst)
-                isMovedFirst = true;
+        if (!isMovedFirst)
+            isMovedFirst = true;
 
-            EffectManager.Instance.NotifyMoved(this);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
     }
     public abstract bool UseSkill();
 
@@ -247,5 +249,4 @@ public abstract class Piece : MonoBehaviour
 
         pieceCoord = new BoardCoord(transform.position.x, transform.position.z);
     }
-
 }

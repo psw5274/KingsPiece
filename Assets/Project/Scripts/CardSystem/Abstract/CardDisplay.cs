@@ -18,8 +18,10 @@ public abstract class CardDisplay : MonoBehaviour, IBeginDragHandler, IDragHandl
     public Text descriptionText;
 
     private static GameObject selectedCard;
-    protected Vector3 dragBeginningPoint;
     private int cardSiblingIndex;
+
+    protected Vector3 originalPosition;
+    protected Vector3 originalMousePosition;
 
     public void ShowFront()
     {
@@ -35,20 +37,21 @@ public abstract class CardDisplay : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     public virtual void OnBeginDrag(PointerEventData eventData)
     {
-        //dragBeginningPoint = this.transform.position;
+        originalPosition = this.transform.position;
+        originalMousePosition = Input.mousePosition;
     }
     public virtual void OnDrag(PointerEventData eventData)
     {
-        this.transform.position = eventData.position;
+        Vector3 newPosition = Input.mousePosition - originalMousePosition;
+        this.transform.position = originalPosition + newPosition;
     }
     public virtual void OnEndDrag(PointerEventData eventData)
     {
-        if (true)
-            this.transform.position = dragBeginningPoint;
+        this.transform.position = originalPosition;
     }
     public virtual void OnPointerDown(PointerEventData eventData)
     {
-        dragBeginningPoint = this.transform.position;
+        originalPosition = this.transform.position;
     }
     public void OnPointerEnter(PointerEventData eventData)
     {

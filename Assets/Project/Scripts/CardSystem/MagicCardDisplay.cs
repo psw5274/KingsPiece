@@ -27,15 +27,15 @@ public class MagicCardDisplay : CardDisplay
         // 앞면 카드 아닐 때
         if (!isFront)
             return;
-        if (dragBeginningPoint != this.transform.position)
+        if (originalPosition != this.transform.position)
         {
-            Debug.Log(dragBeginningPoint);
+            Debug.Log(originalPosition);
             Debug.Log(this.transform.position);
             return;
         }
 
         BoardManager.Instance.ResetBoardHighlighter();
-        BoardManager.Instance.HighlightBoard(cardData.magicData.GetAvailableTargetCoord(),Action.Attack);
+        BoardManager.Instance.HighlightBoard(cardData.magicData.GetAvailableTargetCoord(), Action.Attack);
         BoardManager.Instance.isMagicReady = true;
         BoardManager.Instance.selectedMagicCard = cardData;
     }

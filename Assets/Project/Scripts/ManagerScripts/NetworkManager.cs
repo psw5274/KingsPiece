@@ -17,9 +17,7 @@ public class NetworkManager : Manager<NetworkManager>
     // Receieve Packet From Server to Client
     private static Queue<NetworkPacket> receivingPacketQueue = new Queue<NetworkPacket>();
 
-
-
-    public static void SendingPacketEnqueue(NetworkPacket packet)
+    public void SendingPacketEnqueue(NetworkPacket packet)
     {
         sendingPacketQueue.Enqueue(packet);
     }
@@ -30,11 +28,8 @@ public class NetworkManager : Manager<NetworkManager>
         {
             IPEndPoint remoteEP = Net.IEP;
 
-            Socket client = new Socket(Net.IEP.AddressFamily,
-                                        SocketType.Stream, ProtocolType.Tcp);
-
-            client.BeginConnect(remoteEP,
-                                new AsyncCallback(ConnectCallback), client);
+            Socket client = new Socket(Net.IEP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
 
             connectDone.WaitOne();
 
@@ -52,20 +47,21 @@ public class NetworkManager : Manager<NetworkManager>
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.ToString());
+            Console.WriteLine("ERROR: CONNECT : " + e.ToString());
         }
     }
 
     private static void ConnectCallback(IAsyncResult ar)
     {
-        Socket client = (Socket)ar.AsyncState;
-
-        client.EndConnect(ar);
-        connectDone.Set();
-
-        Debug.Log("Socket connected to " + client.RemoteEndPoint.ToString());
         try
         {
+            Debug.Log("Trying Connect");
+            Socket client = (Socket)ar.AsyncState;
+
+            client.EndConnect(ar);
+            connectDone.Set();
+
+            Debug.Log("Socket connected to " + client.RemoteEndPoint.ToString());
 
         }
         catch (Exception e)
@@ -173,18 +169,17 @@ public class NetworkManager : Manager<NetworkManager>
     {
         new Thread(new ThreadStart(Connect)).Start();
     }
+
     void GetDataFromPacket(NetworkPacket packet)
     {
-        Debug.Log(packet.packetType);
-
         switch (packet.packetType)
         {
             case PacketType.OPPONENT_SOCKET:
-                TeamColor teamColor = packet.packetData[0] == (byte)PacketType.TEAM_BLACK ?
-                                                TeamColor.Black : TeamColor.White;
+                TeamColor teamColor = (packet.packetData[0] == (byte)PacketType.TEAM_BLACK)?
+                                                            TeamColor.Black : TeamColor.White;
 
-                PlayerManager.Instance.SetPlayerTeamColor(teamColor);
                 SceneManager.LoadScene("Playing");
+                PlayerManager.Instance.SetPlayerTeamColor(teamColor);
                 break;
 
             case PacketType.MOVE:
@@ -196,12 +191,12 @@ public class NetworkManager : Manager<NetworkManager>
                 target_x = packet.packetData[2];
                 target_y = packet.packetData[3];
 
-                Piece selectedPiece = BoardManager.Instance.boardStatus[x][y].GetComponent<Piece>();
+                Piece selectedPiece = BoardManager.Instance.GetPieceFromBoardCoord(BoardCoord.GetReverseBoardCoord(x, y));
+                Debug.Log("SELECTED" + selectedPiece);
 
-                selectedPiece.Move(new BoardCoord(target_x, target_y));
-                Debug.Log("MOVE MOVE");
+                selectedPiece.Move(BoardCoord.GetReverseBoardCoord(target_x, target_y));
+
                 break;
-
             case PacketType.ATTACK:
 
                 break;
@@ -216,8 +211,11 @@ public class NetworkManager : Manager<NetworkManager>
         if (receivingPacketQueue.Count > 0)
         {
             NetworkPacket packet = receivingPacketQueue.Dequeue();
-            Debug.Log(packet);
-            Debug.Log(packet.ToString());
+
+            Debug.Log(packet.packetLength);
+            Debug.Log(packet.packetType);
+            foreach (var x in packet.packetData)
+                Debug.Log(x);
 
             GetDataFromPacket(packet);
         }
