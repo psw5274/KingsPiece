@@ -13,8 +13,9 @@ public enum PacketType : byte
     TEAM_WHITE,
     TEAM_BLACK,
 
-    MOVE,   // |x|y|to_x|to_y|
-    ATTACK, // |x|y|to_x|to_y|num|
+    MOVE,   // |x|y|targ_x|targ_y|
+    ATTACK, // |x|y|targ_x|targ_y|
+    MAGIC,  // |targ_x|targ_y|card_name|
     SKILL_ATK_ADDITION,
     SKILL_ATK_MULTIPLICATION,
     SKILL_HP_ADDITION,
@@ -73,6 +74,24 @@ public struct NetworkPacket
         this.packetLength = (byte)(packetData.Length + 2);
     }
 
+    /// <summary>
+    /// NetworkPacket Constructor with PacketType.MAGINC
+    /// </summary>
+    public NetworkPacket(PacketType packetType,int targetX, int targetY, string cardName)
+    {
+        this.packetType = PacketType.MAGIC;
+        this.packetData = new byte[2 + cardName.Length];
+
+        packetData[0] = (byte)targetX;
+        packetData[1] = (byte)targetY;
+
+        for(int i = 0; i < cardName.Length; i++)
+        {
+            packetData[i + 2] = (byte)cardName[i];
+        }
+
+        this.packetLength = (byte)(packetData.Length + 2);
+    }
     public byte[] GetBytes()
     {
         byte[] retByte = new byte[this.packetLength];

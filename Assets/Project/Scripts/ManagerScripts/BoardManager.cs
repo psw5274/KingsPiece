@@ -178,9 +178,7 @@ public class BoardManager : Manager<BoardManager>
             }
             else
             {
-                selectedMagicCard.magicData.Operate(selectedBoardCoord);
-
-                CardManager.Instance.UseCard(selectedMagicCard);
+                CardManager.Instance.UseCard(selectedMagicCard, selectedBoardCoord);
             }
         }
         // 이동
@@ -288,6 +286,8 @@ public class BoardManager : Manager<BoardManager>
 
     public Piece GetPieceFromBoardCoord(BoardCoord coord)
     {
+        if (coord == null)
+            return null;
         return boardStatus[coord.col][coord.row].GetComponent<Piece>();
     }
 

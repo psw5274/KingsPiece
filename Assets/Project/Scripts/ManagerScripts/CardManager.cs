@@ -42,12 +42,20 @@ public class CardManager : MonoBehaviour {
         }
     }
 
-    public void UseCard(BasicCardData usedCard)
+    public void UseCard(BasicCardData usedCard, BoardCoord selectedBoardCoord, bool isNetworkCommand = false)
     {
+        ((MagicCard)usedCard).magicData.Operate(selectedBoardCoord);
+
         List<BasicCardData> playerHands = GameManager.Instance.currentTurn == TeamColor.White ?
                                           whiteHands : blackHands;
         playerHands.Remove(usedCard);
         ShowPlayerHands();
+
+        if(!isNetworkCommand)
+        {
+            NetworkManager.Instance.SendingPacketEnqueue(new NetworkPacket(PacketType.MAGIC,
+                            selectedBoardCoord.col, selectedBoardCoord.row, usedCard.cardName));
+        }
     }
 
     public void ShowPlayerHands()
@@ -101,6 +109,20 @@ public class CardManager : MonoBehaviour {
                                                        -(i - oppositeHands.Count / 2));
             oppositeCardList[i].GetComponent<MagicCardDisplay>().ShowBack();
         }
+    }
+
+    public BasicCardData FindCardFromOppositeHands(string cardName)
+    {
+        List<BasicCardData> oppositeHands;
+        if(PlayerManager.Instance.GetPlayerTeamColor() == TeamColor.White)
+        {
+            oppositeHands = blackHands;
+        }
+        else
+        {
+            oppositeHands = whiteHands;
+        }
+        return oppositeHands.Find(x => x.cardName == cardName);
     }
 
     void Start()

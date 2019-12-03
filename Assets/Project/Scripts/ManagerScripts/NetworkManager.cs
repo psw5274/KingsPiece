@@ -172,6 +172,12 @@ public class NetworkManager : Manager<NetworkManager>
 
     void GetDataFromPacket(NetworkPacket packet)
     {
+        int x, y, target_x, target_y;
+        string cardName = "";
+
+        Piece selectedPiece;
+        BasicCardData selectedCard;
+
         switch (packet.packetType)
         {
             case PacketType.OPPONENT_SOCKET:
@@ -181,26 +187,39 @@ public class NetworkManager : Manager<NetworkManager>
                 SceneManager.LoadScene("Playing");
                 PlayerManager.Instance.SetPlayerTeamColor(teamColor);
                 break;
-
             case PacketType.MOVE:
-                int x, y, target_x, target_y;
-
                 x = packet.packetData[0];
                 y = packet.packetData[1];
 
                 target_x = packet.packetData[2];
                 target_y = packet.packetData[3];
 
-                Piece selectedPiece = BoardManager.Instance.GetPieceFromBoardCoord(BoardCoord.GetReverseBoardCoord(x, y));
-                Debug.Log("SELECTED" + selectedPiece);
-
-                selectedPiece.Move(BoardCoord.GetReverseBoardCoord(target_x, target_y));
-
+                selectedPiece = BoardManager.Instance.GetPieceFromBoardCoord(BoardCoord.GetReverseBoardCoord(x, y));
+                selectedPiece.Move(BoardCoord.GetReverseBoardCoord(target_x, target_y), true);
                 break;
             case PacketType.ATTACK:
+                x = packet.packetData[0];
+                y = packet.packetData[1];
 
+                target_x = packet.packetData[2];
+                target_y = packet.packetData[3];
+
+                selectedPiece = BoardManager.Instance.GetPieceFromBoardCoord(BoardCoord.GetReverseBoardCoord(x, y));
+                selectedPiece.Attack(BoardCoord.GetReverseBoardCoord(target_x, target_y));
                 break;
+            case PacketType.MAGIC:
+                target_x = packet.packetData[0];
+                target_y = packet.packetData[1];
 
+                for(int i = 0; i < packet.packetLength - 4; i++)
+                {
+                    cardName += (char)packet.packetData[2 + i];
+                }
+                Debug.Log("CARD_NAME" + cardName);
+                selectedCard = CardManager.Instance.FindCardFromOppositeHands(cardName);
+                Debug.Log("SELECTED_CARD:" + selectedCard);
+                CardManager.Instance.UseCard(selectedCard, BoardCoord.GetReverseBoardCoord(target_x, target_y), true);
+                break;
             default:
                 break;
         }

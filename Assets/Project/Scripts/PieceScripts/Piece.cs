@@ -168,10 +168,6 @@ public abstract class Piece : MonoBehaviour
 
     public virtual bool Attack(BoardCoord targetCoord)
     {
-        if (!attackTargetList.Exists(x => x == targetCoord))
-        {
-            return false;
-        }
         Piece target = boardManager.boardStatus[targetCoord.col][targetCoord.row].GetComponent<Piece>();
         target.CurrentHP -= this.CurrentATK;
         target.UpdateStatus();
@@ -202,14 +198,20 @@ public abstract class Piece : MonoBehaviour
     /// <param name="destCoord"></param>
     /// <param name="isNetworkCommand">Oppoent Network Move flag for Network reflection</param>
     /// <returns></returns>
-    public bool Move(BoardCoord destCoord)
+    public bool Move(BoardCoord destCoord, bool isNetworkCommand = false)
     {
         EffectManager.Instance.NotifyMoved(this);
 
-        NetworkManager.Instance.SendingPacketEnqueue(new NetworkPacket(PacketType.MOVE,
-                        pieceCoord.col, pieceCoord.row, destCoord.col, destCoord.row));
+        
         Debug.Log("Move (" + pieceCoord.col + "," + pieceCoord.row +
                     ") to " + destCoord.col + "," + destCoord.row);
+
+        // 네트워크 명령일 경우 또 신호 보내는 일 없어야 함
+        if (!isNetworkCommand)
+        {
+            NetworkManager.Instance.SendingPacketEnqueue(new NetworkPacket(PacketType.MOVE,
+                            pieceCoord.col, pieceCoord.row, destCoord.col, destCoord.row));
+        }
 
         boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
         pieceCoord = destCoord;
@@ -218,7 +220,6 @@ public abstract class Piece : MonoBehaviour
 
         if (!isMovedFirst)
             isMovedFirst = true;
-
         return true;
     }
     public abstract bool UseSkill();
