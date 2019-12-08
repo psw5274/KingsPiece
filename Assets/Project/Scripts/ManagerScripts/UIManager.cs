@@ -3,30 +3,11 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 
+public class UIManager : Manager<UIManager>
+{
+    public Text victoryText;
+    public Button endTurnButton;
 
-// 진짜 이딴식으로 할꺼임? 렬루렬루?
-public class UIManager : MonoBehaviour {
-    // Singleton
-    private static UIManager _instance = null;
-    public static UIManager Instance
-    {
-        get
-        {
-            if (!_instance)
-            {
-                _instance = FindObjectOfType(typeof(UIManager)) as UIManager;
-                if (!_instance)
-                {
-                    Debug.Log("ERROR : NO BOARDMANAGER");
-                }
-            }
-            return _instance;
-        }
-    }
-    // Singleton
-
-    [SerializeField]
-    private Text victoryText;
 
     public void SetVictoryText(int teamColor)
     {
@@ -35,15 +16,29 @@ public class UIManager : MonoBehaviour {
         
     }
 
-	// Use this for initialization
-	void Awake ()
+    public void OnClickEndTurnButton()
     {
-        victoryText.enabled = false;
+        if(GameManager.Instance.IsPlayerTurn())
+        {
+            GameManager.Instance.NewTurn();
+        }
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    public void SwitchEndTurnButtonText()
     {
-		
-	}
+        if (GameManager.Instance.IsPlayerTurn())
+        {
+            endTurnButton.GetComponentInChildren<Text>().text = "턴 종료";
+            endTurnButton.enabled = true;
+
+            endTurnButton.image.color = new Color(255, 255, 255);
+        }
+        else
+        {
+            endTurnButton.GetComponentInChildren<Text>().text = "상대 턴";
+            endTurnButton.enabled = false;
+
+            endTurnButton.image.color = new Color(195, 195, 195);
+        }
+    }
 }

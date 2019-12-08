@@ -14,6 +14,8 @@ public class HeroCard : BasicCardData
 
     public GameObject heroModelPrefab;
 
+    public GameObject pieceAttackEffect;
+
     protected List<object> skillList = new List<object>();
 
     

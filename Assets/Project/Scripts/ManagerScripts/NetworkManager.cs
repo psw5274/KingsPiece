@@ -187,6 +187,7 @@ public class NetworkManager : Manager<NetworkManager>
                 SceneManager.LoadScene("Playing");
                 PlayerManager.Instance.SetPlayerTeamColor(teamColor);
                 break;
+
             case PacketType.MOVE:
                 x = packet.packetData[0];
                 y = packet.packetData[1];
@@ -197,6 +198,7 @@ public class NetworkManager : Manager<NetworkManager>
                 selectedPiece = BoardManager.Instance.GetPieceFromBoardCoord(BoardCoord.GetReverseBoardCoord(x, y));
                 selectedPiece.Move(BoardCoord.GetReverseBoardCoord(target_x, target_y), true);
                 break;
+
             case PacketType.ATTACK:
                 x = packet.packetData[0];
                 y = packet.packetData[1];
@@ -205,8 +207,9 @@ public class NetworkManager : Manager<NetworkManager>
                 target_y = packet.packetData[3];
 
                 selectedPiece = BoardManager.Instance.GetPieceFromBoardCoord(BoardCoord.GetReverseBoardCoord(x, y));
-                selectedPiece.Attack(BoardCoord.GetReverseBoardCoord(target_x, target_y));
+                selectedPiece.Attack(BoardCoord.GetReverseBoardCoord(target_x, target_y), true);
                 break;
+
             case PacketType.MAGIC:
                 target_x = packet.packetData[0];
                 target_y = packet.packetData[1];
@@ -219,6 +222,10 @@ public class NetworkManager : Manager<NetworkManager>
                 selectedCard = CardManager.Instance.FindCardFromOppositeHands(cardName);
                 Debug.Log("SELECTED_CARD:" + selectedCard);
                 CardManager.Instance.UseCard(selectedCard, BoardCoord.GetReverseBoardCoord(target_x, target_y), true);
+                break;
+
+            case PacketType.TURN_END:
+                GameManager.Instance.NewTurn(true);
                 break;
             default:
                 break;

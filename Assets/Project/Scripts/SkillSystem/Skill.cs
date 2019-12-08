@@ -54,5 +54,6 @@ public class Skill : ScriptableObject
     {
         var target = BoardManager.Instance.boardStatus[selectedBoardCoord.col][selectedBoardCoord.row].GetComponent<Piece>();
         EffectManager.Instance.AddEffect(target, this);
+
     }
 }

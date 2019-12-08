@@ -16,6 +16,7 @@ public enum PacketType : byte
     MOVE,   // |x|y|targ_x|targ_y|
     ATTACK, // |x|y|targ_x|targ_y|
     MAGIC,  // |targ_x|targ_y|card_name|
+    TURN_END,
     SKILL_ATK_ADDITION,
     SKILL_ATK_MULTIPLICATION,
     SKILL_HP_ADDITION,
@@ -24,7 +25,6 @@ public enum PacketType : byte
     SKILL_HP_MULTIPLICATION,
     SKILL_IMMOVABLE,
     SKILL_UNBEATABLE,
-    TURN_END,
 }
 
 
@@ -60,10 +60,10 @@ public struct NetworkPacket
     /// <param name="originX"></param>
     /// <param name="originY"></param>
     /// <param name="destX"></param>
-    /// <param name="destY"></param>
+    /// <param name="destY"></param> 
     public NetworkPacket(PacketType packetType, int originX, int originY, int destX, int destY)
     {
-        this.packetType = PacketType.MOVE;
+        this.packetType = packetType;
         this.packetData = new byte[4];
 
         packetData[0] = (byte)originX;

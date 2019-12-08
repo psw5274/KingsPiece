@@ -8,4 +8,5 @@ using UnityEngine.UI;
 public class MagicCard : BasicCardData
 {
     public Skill magicData;
+    public GameObject magicEffect;
 }

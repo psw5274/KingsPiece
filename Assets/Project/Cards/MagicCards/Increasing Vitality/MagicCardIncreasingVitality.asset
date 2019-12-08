@@ -19,3 +19,4 @@ MonoBehaviour:
   cardPortraitImage: {fileID: 21300000, guid: 42f6c722ead369b4b934a116b4324a4d, type: 3}
   cardGrade: 0
   magicData: {fileID: 11400000, guid: 0c09d4ae03fadfb468291adddb4531d0, type: 2}
+  magicEffect: {fileID: 100004, guid: 3af6f68141914ca43ba39b2403757bd0, type: 3}

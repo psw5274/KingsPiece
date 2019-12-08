@@ -25,8 +25,10 @@ public class MagicCardDisplay : CardDisplay
     public override void OnPointerUp(PointerEventData eventData)
     {
         // 앞면 카드 아닐 때
-        if (!isFront)
+        if (!isFront || !GameManager.Instance.IsPlayerTurn())
             return;
+
+
         if (originalPosition != this.transform.position)
         {
             Debug.Log(originalPosition);

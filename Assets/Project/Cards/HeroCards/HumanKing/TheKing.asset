@@ -24,3 +24,5 @@ MonoBehaviour:
   statATK: 15
   heroModelPrefab: {fileID: 1725489957569692, guid: fc9da8e6da45f714d9697cd9da364a84,
     type: 3}
+  pieceAttackEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3,
+    type: 3}

@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class CardManager : MonoBehaviour {
+public class CardManager : Manager<CardManager> {
     // 어차피 덱은 고정 길이
     // public List<BasicCardData> whiteCardDeck = new List<BasicCardData>();
     // public List<BasicCardData> blackCardDeck = new List<BasicCardData>();
@@ -24,27 +25,21 @@ public class CardManager : MonoBehaviour {
     public List<GameObject> playerCardList = new List<GameObject>();
     public List<GameObject> oppositeCardList = new List<GameObject>();
 
+    public Image deckImage;
 
-    private static CardManager instance = null;
-    public static CardManager Instance
+    public void DrawCard()
     {
-        get
-        {
-            if (!instance)
-            {
-                instance = FindObjectOfType(typeof(CardManager)) as CardManager;
-                if (!instance)
-                {
-                    Debug.Log("ERROR : NO BoardManager");
-                }
-            }
-            return instance;
-        }
+
     }
 
     public void UseCard(BasicCardData usedCard, BoardCoord selectedBoardCoord, bool isNetworkCommand = false)
     {
         ((MagicCard)usedCard).magicData.Operate(selectedBoardCoord);
+
+        // 임시 이펙트
+        var effect = Instantiate(((MagicCard)usedCard).magicEffect,
+                        selectedBoardCoord.GetBoardCoardVector3() + new Vector3(0, 3.5f, 0.01f),
+                        Quaternion.identity).transform.localScale *= 10.0f;
 
         List<BasicCardData> playerHands = GameManager.Instance.currentTurn == TeamColor.White ?
                                           whiteHands : blackHands;
@@ -77,7 +72,7 @@ public class CardManager : MonoBehaviour {
             playerCardList[i].GetComponent<MagicCardDisplay>().cardData = (MagicCard)hands[i];
 
             playerCardList[i].transform.position = handsZone.transform.position + 
-                                                   new Vector3((i - hands.Count/2) * 20, 0, 1);
+                                                   new Vector3((i - hands.Count/2) * 40, 0, 1);
             playerCardList[i].transform.RotateAround(handsZone.transform.position, new Vector3(0, 0, 1),
                                                      -(i - hands.Count / 2));
 
@@ -103,7 +98,7 @@ public class CardManager : MonoBehaviour {
             oppositeCardList[i].GetComponent<MagicCardDisplay>().cardData = (MagicCard)oppositeHands[i];
 
             oppositeCardList[i].transform.position = oppositeHandsZone.transform.position +
-                                                    new Vector3(-(i - oppositeHands.Count / 2) * 20, 0, 1);
+                                                    new Vector3(-(i - oppositeHands.Count / 2) * 40, 0, 1);
             oppositeCardList[i].transform.RotateAround(oppositeHandsZone.transform.position, 
                                                        new Vector3(0, 0, 1),
                                                        -(i - oppositeHands.Count / 2));

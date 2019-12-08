@@ -37,6 +37,7 @@ public class BoardManager : Manager<BoardManager>
     /// Chess Board Status with pieces
     /// </summary>
     public GameObject[][] boardStatus;
+    [SerializeField]
     private List<GameObject> filterList = new List<GameObject>();
 
     [SerializeField]
@@ -90,6 +91,9 @@ public class BoardManager : Manager<BoardManager>
                         pieceZone.transform);
             boardStatus[i][0].GetComponent<Piece>().Initialize(playerTeamColor, heroCards[i]);
 
+            Instantiate(pieceUIPrefab, boardStatus[i][0].transform);
+
+
             boardStatus[i][NUM_BOARD_ROW - 1] =
             Instantiate(heroCards[i + NUM_PIECE_PREFABS / 2].heroModelPrefab,
                         BoardCoord.GetBoardCoordVector3(NUM_BOARD_COL - 1, i),
@@ -97,6 +101,8 @@ public class BoardManager : Manager<BoardManager>
                         pieceZone.transform);
             boardStatus[i][NUM_BOARD_ROW - 1].GetComponent<Piece>().Initialize(opponentTeamColor,
                                                                                heroCards[i+NUM_PIECE_PREFABS/2]);
+
+            Instantiate(pieceUIPrefab, boardStatus[i][NUM_BOARD_ROW-1].transform);
         }
 
         // code for when num of user's piece set are 18
@@ -111,6 +117,7 @@ public class BoardManager : Manager<BoardManager>
                             heroCards[8].heroModelPrefab.transform.rotation,
                             pieceZone.transform);
                 boardStatus[i][1].GetComponent<Piece>().Initialize(playerTeamColor, heroCards[8]);
+                Instantiate(pieceUIPrefab, boardStatus[i][1].transform);
 
                 boardStatus[i][NUM_BOARD_ROW - 2] =
                 Instantiate(heroCards[8 + NUM_PIECE_PREFABS / 2].heroModelPrefab,
@@ -119,7 +126,7 @@ public class BoardManager : Manager<BoardManager>
                             pieceZone.transform);
                 boardStatus[i][NUM_BOARD_ROW - 2].GetComponent<Piece>().Initialize(opponentTeamColor,
                                                                                     heroCards[8 + NUM_PIECE_PREFABS / 2]);
-
+                Instantiate(pieceUIPrefab, boardStatus[i][NUM_BOARD_ROW-2].transform);
             }
         }
 
@@ -172,6 +179,7 @@ public class BoardManager : Manager<BoardManager>
         // 스킬 사용
         if (isMagicReady && selectedMagicCard != null)
         {
+            Debug.Log("SKILL!");
             if (boardStatus[selectedBoardCoord.col][selectedBoardCoord.row] == null)
             {
                 ResetBoardHighlighter();
@@ -184,12 +192,14 @@ public class BoardManager : Manager<BoardManager>
         // 이동
         else if (isPieceSelected && selectedPieceScript.IsDetinationAvailable(selectedBoardCoord))
         {
+            Debug.Log("MOVE!");
             selectedPieceScript.Move(selectedBoardCoord);
             GameManager.Instance.isMoved = true;
         }
         // 공격
         else if (isPieceSelected && selectedPieceScript.IsAttackAvailable(selectedBoardCoord))
-        { 
+        {
+            Debug.Log("ATTACK!");
             selectedPieceScript.Attack(selectedBoardCoord);
             selectedPieceScript.UpdateStatus();
 
@@ -294,5 +304,7 @@ public class BoardManager : Manager<BoardManager>
     private void Awake()
     {
         InitBoard();
+
+        UIManager.Instance.SwitchEndTurnButtonText();
     }
 }

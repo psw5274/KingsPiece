@@ -19,6 +19,9 @@ public abstract class Piece : MonoBehaviour
     public List<BoardCoord> moveDestinationList = new List<BoardCoord>();
     public List<BoardCoord> attackTargetList = new List<BoardCoord>();
 
+    public GameObject pieceAttackEffect;
+
+    [SerializeField]
     private int currentHP = 0;
     private int additionalHP = 0;
     public int CurrentHP
@@ -58,6 +61,8 @@ public abstract class Piece : MonoBehaviour
         }
     }
     private int additionalATK = 0;
+
+    [SerializeField]
     public int CurrentATK
     {
         get
@@ -99,7 +104,8 @@ public abstract class Piece : MonoBehaviour
     {
         this.teamColor = teamColor;
         this.cardData = heroCard;
-        cardData = (HeroCard)ScriptableObject.CreateInstance(typeof(HeroCard));
+        this.pieceAttackEffect = heroCard.pieceAttackEffect;
+        //cardData = (HeroCard)ScriptableObject.CreateInstance(typeof(HeroCard));
 
         currentHP = heroCard.statHP;
     }
@@ -166,29 +172,38 @@ public abstract class Piece : MonoBehaviour
         }
     }
 
-    public virtual bool Attack(BoardCoord targetCoord)
+    public virtual bool Attack(BoardCoord targetCoord, bool isNetworkCommand = false)
     {
         Piece target = boardManager.boardStatus[targetCoord.col][targetCoord.row].GetComponent<Piece>();
         target.CurrentHP -= this.CurrentATK;
         target.UpdateStatus();
 
+        if (!isNetworkCommand)
+        {
+            NetworkManager.Instance.SendingPacketEnqueue(new NetworkPacket(PacketType.ATTACK, 
+                            pieceCoord.col, pieceCoord.row, targetCoord.col, targetCoord.row));
+        }
+
+        // tmp effect
+        var effect = Instantiate(this.pieceAttackEffect,
+                        targetCoord.GetBoardCoardVector3() + new Vector3(0, 3.5f, 0.01f),
+                        Quaternion.identity).transform.localScale *= 10.0f;
+        var animator = GetComponent<Animator>();
+        animator.Play("Attack", -1, 0f);
+
         if (target.pieceStatus == PieceStatus.Dead)
         {
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
-            this.pieceCoord = targetCoord;
-            this.transform.position = pieceCoord.GetBoardCoardVector3();
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
+            this.Move(targetCoord, true);
         }
         else // not dead
         {
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
-            this.pieceCoord = targetCoord - (targetCoord - this.pieceCoord).GetDirectionalCoord();
-            this.transform.position = pieceCoord.GetBoardCoardVector3();
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
+            this.Move(targetCoord - (targetCoord - this.pieceCoord).GetDirectionalCoord(), true);
         }
 
         EffectManager.Instance.NotifyAttacking(this);
         EffectManager.Instance.NotifyDamaged(target);
+
+
         return true;
     }
 
@@ -201,7 +216,6 @@ public abstract class Piece : MonoBehaviour
     public bool Move(BoardCoord destCoord, bool isNetworkCommand = false)
     {
         EffectManager.Instance.NotifyMoved(this);
-
         
         Debug.Log("Move (" + pieceCoord.col + "," + pieceCoord.row +
                     ") to " + destCoord.col + "," + destCoord.row);
@@ -213,15 +227,33 @@ public abstract class Piece : MonoBehaviour
                             pieceCoord.col, pieceCoord.row, destCoord.col, destCoord.row));
         }
 
+        StartCoroutine(MoveToCoroutine(this.gameObject.transform,
+                                       destCoord.GetBoardCoardVector3(),
+                                       0.25f));
+
         boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
+        boardManager.boardStatus[destCoord.col][destCoord.row] = this.gameObject;
         pieceCoord = destCoord;
-        this.transform.position = pieceCoord.GetBoardCoardVector3();
-        boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
 
         if (!isMovedFirst)
             isMovedFirst = true;
         return true;
     }
+    public IEnumerator MoveToCoroutine(Transform targ, Vector3 pos, float dur)
+    {
+        float t = 0f;
+        Vector3 start = targ.position;
+        Vector3 v = pos - start;
+        while (t < dur)
+        {
+            t += Time.deltaTime;
+            targ.position = start + v * t / dur;
+            yield return null;
+        }
+
+        targ.position = pos;
+    }
+
     public abstract bool UseSkill();
 
     public void UpdateStatus()

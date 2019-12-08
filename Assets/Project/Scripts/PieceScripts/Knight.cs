@@ -47,26 +47,33 @@ public class Knight : Piece
         return true;
     }
 
-    public override bool Attack(BoardCoord targetCoord)
+    public override bool Attack(BoardCoord targetCoord, bool isNetworkCommand = false)
     {
-        if (!attackTargetList.Exists(x => x == targetCoord))
-        {
-            return false;
-        }
         Piece target = boardManager.boardStatus[targetCoord.col][targetCoord.row].GetComponent<Piece>();
         target.CurrentHP -= this.CurrentATK;
         target.UpdateStatus();
 
+        if (!isNetworkCommand)
+        {
+            NetworkManager.Instance.SendingPacketEnqueue(new NetworkPacket(PacketType.ATTACK,
+                            pieceCoord.col, pieceCoord.row, targetCoord.col, targetCoord.row));
+        }
+
+        // tmp effect
+        var effect = Instantiate(this.pieceAttackEffect,
+                        targetCoord.GetBoardCoardVector3() + new Vector3(0, 3.5f, 0.01f),
+                        Quaternion.identity).transform.localScale *= 10.0f;
+        var animator = GetComponent<Animator>();
+        animator.Play("Attack", -1, 0f);
+        
         if (target.pieceStatus == PieceStatus.Dead)
         {
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = null;
-            this.pieceCoord = targetCoord;
-            this.transform.position = pieceCoord.GetBoardCoardVector3();
-            boardManager.boardStatus[pieceCoord.col][pieceCoord.row] = this.gameObject;
+            this.Move(targetCoord, true);
         }
 
         EffectManager.Instance.NotifyAttacking(this);
         EffectManager.Instance.NotifyDamaged(target);
+
         return true;
     }
 }
